@@ -1,0 +1,7 @@
+{
+  "RESULT_TOPIC": "hdlaml_topic",
+  "RESULT_BUCKET": "hdlaml_buckettext",
+  "TRANSLATE_TOPIC": "hdlaml_translate",
+  "TRANSLATE": true,
+  "TO_LANG": ["en", "fr", "es", "ja", "ru"]
+}
