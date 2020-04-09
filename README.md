@@ -40,14 +40,30 @@ febrero04-2020 :
 - ya durante este mes desarrolle el tfrecords haciendo mas eficiente el almacenamiento en este tipo de archivo, y el reshape de las facturas, hay que pensar si las imagenes serán jpeg o tiif, mas aun en que resolución se debe escanear para evitar perdida de información.  Definir el ratio de una imagen tamaño oficio.
 - probé que una red sencilla aceptara imagenes en 224*224*3 y 900*700*3
 - La etapa que sigue es crear un tf record completo, además entrenar con la base de datos.
-- recordar que las categorias están desbalanceadas, probar inicialmente así si converge la red, en caso contrario aumentar datos a la máxima cantidad de muestras que se tenga por categoria.
+- recordar que las categorias están desbalanceadas, probar inicialmente si así converge la red, en caso contrario aumentar datos a la máxima cantidad de muestras que se tenga por categoria.
 
+abril 08-2020
+- En marzo 16 vendi la RTX2070, que funcionó bien para desarrollo, ahora intentaré desarrollar en local con la mac y probar robusto en GCP
+- Para "Vision" Lo último realizado fue pruebas de convergencia con una muestra de 10 categorias de fotos, el accuracy estaba sobre el 90%
+- Sigue focalizarse en Vision, probar que funcione el código en mac bajo contenedor y estandarizar el dockerfile ante librerias que se requieran especiales.
 
-Guia
+Guia Devops
 
-- Siempre usar Github
-  Primero instalar git
-  usuario hdlopeza
-  psw Hernan80*
+- Software a instalar Macosx
+  Docker desktop
+  Github: hdlopeza(Hernan80*)
+  Git
+  VsCode : Remote development extension pack + docker
+    ejecutar folder from docker, previamente la imagen debe estar creada, luego --y esto es clave-- con los servicios parados donde aparezca la ruta ejecutar desde docker
+  ssh
 
-  Estamos en el proyecto vision
+- Desarrollo
+  Local sin GPU
+  GCP VM Base prueba
+  GCP VM GPU prueba
+  GCP VM Robusta Entrenamiento
+
+- Flujo de desarrollo
+  Desde Macosx usando Vscode se conecta al contenedor con tensorflow y realiza desarrollo y pruebas
+  Desde Macosx usando VsCode se conecta al contenedor con GCP-SDK para cargar datos a la VM
+  Desde Macosx usando VsCode y ssh se conecta a GCP para realizar pruebas y entrenamiento
