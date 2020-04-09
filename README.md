@@ -41,3 +41,13 @@ febrero04-2020 :
 - probé que una red sencilla aceptara imagenes en 224*224*3 y 900*700*3
 - La etapa que sigue es crear un tf record completo, además entrenar con la base de datos.
 - recordar que las categorias están desbalanceadas, probar inicialmente así si converge la red, en caso contrario aumentar datos a la máxima cantidad de muestras que se tenga por categoria.
+
+
+Guia
+
+- Siempre usar Github
+  Primero instalar git
+  usuario hdlopeza
+  psw Hernan80*
+
+  Estamos en el proyecto vision
