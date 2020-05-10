@@ -47,23 +47,5 @@ abril 08-2020
 - Para "Vision" Lo último realizado fue pruebas de convergencia con una muestra de 10 categorias de fotos, el accuracy estaba sobre el 90%
 - Sigue focalizarse en Vision, probar que funcione el código en mac bajo contenedor y estandarizar el dockerfile ante librerias que se requieran especiales.
 
-Guia Devops
-
-- Software a instalar Macosx
-  Docker desktop
-  Github: hdlopeza(Hernan80*)
-  Git
-  VsCode : Remote development extension pack + docker
-    ejecutar folder from docker, previamente la imagen debe estar creada, luego --y esto es clave-- con los servicios parados donde aparezca la ruta ejecutar desde docker
-  ssh
-
-- Desarrollo
-  Local sin GPU
-  GCP VM Base prueba
-  GCP VM GPU prueba
-  GCP VM Robusta Entrenamiento
-
-- Flujo de desarrollo
-  Desde Macosx usando Vscode se conecta al contenedor con tensorflow y realiza desarrollo y pruebas
-  Desde Macosx usando VsCode se conecta al contenedor con GCP-SDK para cargar datos a la VM
-  Desde Macosx usando VsCode y ssh se conecta a GCP para realizar pruebas y entrenamiento
+mayo 09-2020
+- Tras un mes muerto hoy reinicio operaciones con una nueva maquina
