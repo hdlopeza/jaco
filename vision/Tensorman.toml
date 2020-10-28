@@ -1,0 +1,3 @@
+docker_flags = ['-v', '/media/hernan/Data_dev/data:/project/data']
+tag = 'latest'
+variants = ['python3', 'gpu', 'jupyter']
