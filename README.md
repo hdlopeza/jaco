@@ -1,17 +1,13 @@
 # jaco
-@author:  Hernán Darío López Archila
+* @author:  Hernán Darío López Archila
+* @email: hernand.lopeza@gmail.com
 
-@email: hernand.lopeza@gmail.com
+M.I.L.E Machine Interactive Learning Enterprises
 
-M.I.L.E
-
-Machine Intelligent Learning Enterprises
-
-
-@proyecto:	Agente que causa facturas en un erp
-@etapa1:	Reconocimiento de factura e identificacion de la misma
-		@nameetapa: vision
-		@technology: red convolucional
+* @proyecto:	Agente que causa facturas en un erp
+* @etapa1:	Reconocimiento de factura e identificacion de la misma
+	*	@nameetapa: vision
+	*	@technology: red convolucional
 
 @etapa2:	Lectura del documento e identifiacion de entidades
 		@nameetapa: ocr
