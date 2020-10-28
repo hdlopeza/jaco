@@ -9,23 +9,20 @@ M.I.L.E Machine Interactive Learning Enterprises
 	*	@nameetapa: vision
 	*	@technology: red convolucional
 
-@etapa2:	Lectura del documento e identifiacion de entidades
-		@nameetapa: ocr
-		@technology: 3rd party, google vision
+* @etapa2:	Lectura del documento e identifiacion de entidades
+	*	@nameetapa: ocr
+	*	@technology: 3rd party, google vision
 
-@etapa3:	Asociacion de entidades a cuenta contable
-		@nameetapa: nlp
-		@technology: use a nlp or rnn
+* @etapa3:	Asociacion de entidades a cuenta contable
+	*	@nameetapa: nlp
+	*	@technology: use a nlp or rnn
 
 @directory
 
 root:
   |__ vision
-  |__ MILE (aun no se que hay)
   |__ NLP nlp (aun no se que hay)
   |__ OCR (aun no se que hay)
-  |__ original (aun no se que hay)
-  |__ prueba (aun no se que hay)
   |__ images (este se migrará a vision una vez este funcional en tf20)
 
 
@@ -47,3 +44,6 @@ abril 08-2020
 
 mayo 09-2020
 - Tras un mes muerto hoy reinicio operaciones con una nueva maquina
+
+octubre 27-2020
+- Otra vez tras varios meses muertos reinicio con toda a terminar el proyecto
