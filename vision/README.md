@@ -1,16 +1,12 @@
 # vision
  
-@author:  Hernán Darío López Archila
-@email: hernand.lopeza@gmail.com
+- @author:  Hernán Darío López Archila
+- @email: hernand.lopeza@gmail.com
 
-M.I.L.E
-Machine Intelligent Learning Enterprises
-
-
-@proyecto:	Agente que causa facturas en un ERP
-@etapa1:	Reconocimiento de factura e identificacion de la misma
-		@nameetapa: vision
-		@technology: red convolucional
+- @proyecto:	Agente que causa facturas en un ERP
+- @etapa1:	Reconocimiento de factura e identificacion de la misma
+	-	@nameetapa: vision
+	-	@technology: red convolucional
 
 root:
   |__ data (almacena las imagenes)
