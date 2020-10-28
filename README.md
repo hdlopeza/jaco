@@ -19,12 +19,13 @@ M.I.L.E Machine Interactive Learning Enterprises
 
 @directory
 
+```
 root:
-  |__ vision
-  |__ NLP nlp (aun no se que hay)
-  |__ OCR (aun no se que hay)
-  |__ images (este se migrará a vision una vez este funcional en tf20)
-
+  |-- vision
+  |-- NLP nlp (aun no se que hay)
+  |-- OCR (aun no se que hay)
+  |-- images (este se migrará a vision una vez este funcional en tf20)
+```
 
 @updated: enero 11 2020
 
