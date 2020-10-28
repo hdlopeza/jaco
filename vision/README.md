@@ -26,6 +26,6 @@ Contenedor
 
  @flujo
 
- a. Son las librerias que se requieren para que el codigo funcione
- b. Son las librerias de preprocesamiento de datos
+ 1. Son las librerias que se requieren para que el codigo funcione
+ 1. Son las librerias de preprocesamiento de datos
 
