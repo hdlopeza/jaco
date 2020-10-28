@@ -10,7 +10,7 @@ M.I.L.E Machine Interactive Learning Enterprises
 	*	@technology: red convolucional
 
 * @etapa2:	Lectura del documento e identifiacion de entidades
-	*	@nameetapa: ocr
+	*	@nameetapa: ocr y YOLO
 	*	@technology: 3rd party, google vision
 
 * @etapa3:	Asociacion de entidades a cuenta contable
@@ -47,3 +47,4 @@ mayo 09-2020
 
 octubre 27-2020
 - Otra vez tras varios meses muertos reinicio con toda a terminar el proyecto
+- Se define que YOLO hará parte del proyecto a fin de reconocer los campos de la factura
