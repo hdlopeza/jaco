@@ -67,6 +67,11 @@ def _decode(tensor_string):
 
 #%% Funcion para preprocesamiento de las imagenes
 def _preprocess_image(img_dic):
+    """  
+    Function that takes a image_dic, normalized (divided by 255) and returns a tupe (x, y)
+    """
+
+    # image, label = image_dic['image'], image_dic['label']
 
 #    image = tf.io.parse_tensor(img_dict["image"], tf.string)
 #    image = tf.io.parse_tensor(serialized=img_dic["image"], out_type=tf.uint8) # era tf.string
