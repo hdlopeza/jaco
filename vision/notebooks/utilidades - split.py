@@ -17,6 +17,7 @@ Return:
 Example:
     split_folders imgs --ratio .8 .1 .1 
 author: @hdlopeza (Hernan Lopez Archila, hernand.lopeza@gmail.com)
+Esta libreria deberia cambiarla por sklearn
 """
 
 import pathlib
