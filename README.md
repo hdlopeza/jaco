@@ -33,7 +33,7 @@ root:
 @track:
 enero11-2020 : reinicio del proyecto con documentación, y sobre la etapa1 vision, aqui hay buenas perspectivas de terminar rápido dado el GPU RTX2070, sin embargo primero es reconfigurar lo hecho anteriormente en tf20
 
-febrero04-2020 : 
+febrero04-2020 :
 
 * ya durante este mes desarrolle el tfrecords haciendo mas eficiente el almacenamiento en este tipo de archivo, y el reshape de las facturas, hay que pensar si las imagenes serán jpeg o tiif, mas aun en que resolución se debe escanear para evitar perdida de información.  Definir el ratio de una imagen tamaño oficio.
 * probé que una red sencilla aceptara imagenes en 224*224*3 y 900*700*3
@@ -54,3 +54,8 @@ octubre 27-2020
 
 * Otra vez tras varios meses muertos reinicio con toda a terminar el proyecto
 * Se define que YOLO hará parte del proyecto a fin de reconocer los campos de la factura
+
+mayo 27-2021
+
+* Si, otra vez iniciando, pero esta vez si, todo depende de ello
+* ya todo está consolidado en github
