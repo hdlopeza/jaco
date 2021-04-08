@@ -1,0 +1,699 @@
+// The custom function below shows how to perform basic Built-in checks
+// and show messages to the user if the checks are not fulfilled.
+
+// This function example can be used for annotation_content events
+// (e.g. user_update action). annotation_content events provide annotation
+// content tree as the input.
+
+// Main function returns the messages to be shown to the users.
+// It is called by rossum_hook_request_handler when executing the function.
+// @param {Object} annotationContent - the annotation content tree (see https://api.elis.rossum.ai/docs/#annotation-data)
+// @param {Object} schemaContent - content of the schema listing individual fields defined in the schema.
+// @returns {Array} - the list of messages to be shown to the use.
+const main = (annotationContent, schemaContent) => {
+
+  let messages = [];
+
+  /* --- Amounts --- */
+
+  // Total Amount == Total Base + Total Tax
+  messages = totalAmountVsTotalBasePlusTotalTax(annotationContent, schemaContent, messages);
+
+  /* --- Dates --- */
+
+  // 0 <= (Date Due - Date Issue).days <= 120
+  messages = dateDueMinusDateIssueMinMaxBoundary(annotationContent, schemaContent, messages);
+
+  /* --- Tax details --- */
+
+  // Tax Detail Tax = Tax Detail Base * Tax Detail Rate
+  messages = taxDetailTaxVsTaxDetailBaseMultTaxDetailRate(annotationContent, schemaContent, messages);
+
+  // Tax Detail Total = Tax Detail Base + Tax Detail Tax
+  messages = taxDetailTotalVsTaxDetailBasePlusTaxDetailTax(content, schemaContent, messages);
+
+  /* --- Line items --- */
+
+  // Item Amount Total == Item Total Base + Item Tax 
+  messages = itemAmountTotalVsItemAmountBasePlusItemTax(annotationContent, schemaContent, messages);
+
+  // Item Total Base == Item Amount Base * Item Quantity
+  messages = itemAmountTotalBaseVsItemAmountBaseMultItemQuantity(annotationContent, schemaContent, messages);
+
+  // Item Amount Total == Item Amount * Item Quantity
+  messages = itemAmountTotalVsItemAmountMultItemQuantity(annotationContent, schemaContent, messages);
+
+  // Item Tax == Item Total Base * Item Rate 
+  messages = itemTaxVsItemAmountBaseMultItemRate(annotationContent, schemaContent, messages);
+
+  /* --- Amounts vs. Tax details --- */
+
+  // 'Total Amount == SUM(Tax Detail Total)'
+  messages = totalAmountVsTaxDetailTotal(annotationContent, schemaContent, messages);
+
+  // 'Total Amount Base == SUM(Tax Detail Total Base)''
+  messages = totalAmountBaseVsTaxDetailBase(annotationContent, schemaContent, messages);
+
+  // 'Total Amount Tax == SUM(Tax Detail Tax)'
+  messages = totalAmountTaxVsTaxDetailTax(annotationContent, schemaContent, messages);
+
+  /* --- Amounts vs. Line items --- */
+
+  // 'Total Amount == SUM(Item Amount Total)'
+  messages = totalAmountVsLineItemsAmountTotal(annotationContent, schemaContent, messages);
+
+  // 'Total Amount Base == SUM(Item Total Base)'
+  messages = totalAmountBaseVsLineItemsAmountTotalBase(annotationContent, schemaContent, messages);
+
+  // 'Total Amount Tax == SUM(Item Tax)'
+  messages = totalAmountTaxVsLineItemsTax(annotationContent, schemaContent, messages);
+
+  return messages;
+
+};
+
+
+/* --- Built-in Checks Functions ---- */
+
+/* --- Amounts --- */
+
+// Rule 'Total Amount == Total Base + Total Tax'
+const totalAmountVsTotalBasePlusTotalTax = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["amount_total"],
+    rightFieldsSchemaIds = ["amount_total_base", "amount_total_tax"],
+    messageType = "warning",
+    messageContent = `${getLabelBySchemaId(schemaContent, 'amount_total')} == ${getLabelBySchemaId(schemaContent, 'amount_total_base')} + ${getLabelBySchemaId(schemaContent, 'amount_total_tax')}' not fulfilled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+/* --- Dates --- */
+
+// Rule '0 <= (Date Due - Date Issue).days <= 120'
+// Rule '0 <= (Date Due - Date Issue).days <= 120'
+const dateDueMinusDateIssueMinMaxBoundary = (annotationContent, schemaContent, messages) => {
+
+  let upperBound = 120;
+  let lowerBound = 0;
+
+  const newMessages = checkRightMinusLeftWithinRange(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldSchemaId = "date_due",
+    rightFieldSchemaId = "date_issue",
+    dataType = 'date',
+    lowerBound = lowerBound,
+    upperBound = upperBound,
+    messageType = "warning",
+    messageContent = `${getLabelBySchemaId(schemaContent, 'date_due')} is not within ${upperBound} days after ${getLabelBySchemaId(schemaContent, 'date_issue')}.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+/* --- Tax details --- */
+
+// Rule 'Tax Detail Tax = Tax Detail Base * Tax Detail Rate' (we account a level of uncertainty if some values are rounded, etc.)
+const taxDetailTaxVsTaxDetailBaseMultTaxDetailRate = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightMultiplication(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["tax_detail_tax"],
+    rightFieldsSchemaIds = ["tax_detail_base", "tax_detail_rate"],
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'tax_detail_tax')} == ${getLabelBySchemaId(schemaContent, 'tax_detail_base')} * ${getLabelBySchemaId(schemaContent, 'tax_detail_rate')}' not fulfilled.`,
+    epsilon = 0.5);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+// Rule 'Tax Detail Total = Tax Detail Base + Tax Detail Tax' 
+const taxDetailTotalVsTaxDetailBasePlusTaxDetailTax = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["tax_detail_total"],
+    rightFieldsSchemaIds = ["tax_detail_base", "tax_detail_tax"],
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'tax_detail_total')} == ${getLabelBySchemaId(schemaContent, 'tax_detail_base')} + ${getLabelBySchemaId(schemaContent, 'tax_detail_tax')}' not fulfilled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+/* --- Line items --- */
+
+// Rule 'Item Amount Total == Item Total Base + Item Tax'
+const itemAmountTotalVsItemAmountBasePlusItemTax = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["item_amount_total"],
+    rightFieldsSchemaIds = ["item_total_base", "item_tax"],
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'item_amount_total')} == ${getLabelBySchemaId(schemaContent, 'item_total_base')}  + ${getLabelBySchemaId(schemaContent, 'item_tax')}' not fulfilled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+// Rule 'Item Total Base == Item Amount Base * Item Quantity' (we account a level of uncertainty if some values are rounded, etc.)
+const itemAmountTotalBaseVsItemAmountBaseMultItemQuantity = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightMultiplication(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["item_total_base"],
+    rightFieldsSchemaIds = ["item_amount_base", "item_quantity"],
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'item_total_base')} == ${getLabelBySchemaId(schemaContent, 'item_amount_base')} * ${getLabelBySchemaId(schemaContent, 'item_quantity')}' not fulfilled.`,
+    epsilon = 0.5);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+// Rule 'Item Amount Total == Item Amount * Item Quantity' (we account a level of uncertainty if some values are rounded, etc.)
+const itemAmountTotalVsItemAmountMultItemQuantity = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightMultiplication(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["item_amount_total"],
+    rightFieldsSchemaIds = ["item_amount", "item_quantity"],
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'item_amount_total')} == ${getLabelBySchemaId(schemaContent, 'item_amount')} * ${getLabelBySchemaId(schemaContent, 'item_quantity')}' not fulfilled.`,
+    epsilon = 0.5);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+// Rule 'Item Tax == Item Total Base * Item Rate' (we account a level of uncertainty if some values are rounded, etc.)
+const itemTaxVsItemAmountBaseMultItemRate = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkLeftSumEqualsRightMultiplication(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    leftFieldsSchemaIds = ["item_tax"],
+    rightFieldsSchemaIds = ["item_total_base", "item_rate"],
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'item_tax')} == ${getLabelBySchemaId(schemaContent, 'item_total_base')} * ${getLabelBySchemaId(schemaContent, 'item_rate')}' not fulfilled.`,
+    epsilon = 0.5);
+
+  return [
+    ...messages,
+    ...newMessages
+  ]
+
+}
+
+
+/* --- Amounts vs. Tax details --- */
+
+// Rule 'Total Amount == SUM(Tax Detail Total)'
+const totalAmountVsTaxDetailTotal = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkHeaderFieldEqualsTableColumnSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    headerFieldSchemaId = "amount_total",
+    tableColumnSchemaId = "tax_detail_total",
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'amount_total')} == SUM(Tax detail ${getLabelBySchemaId(schemaContent, 'tax_detail_total')})' not fulfiled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ];
+
+};
+
+
+// Rule 'Total Amount Base == SUM(Tax Detail Total Base)'
+const totalAmountBaseVsTaxDetailBase = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkHeaderFieldEqualsTableColumnSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    headerFieldSchemaId = "amount_total_base",
+    tableColumnSchemaId = "tax_detail_base",
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'amount_total_base')} == SUM(Tax detail ${getLabelBySchemaId(schemaContent, 'tax_detail_base')})' not fulfiled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ];
+
+};
+
+// Rule 'Total Amount Tax == SUM(Tax Detail Tax)
+const totalAmountTaxVsTaxDetailTax = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkHeaderFieldEqualsTableColumnSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    headerFieldSchemaId = "amount_total_tax",
+    tableColumnSchemaId = "tax_detail_tax",
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'amount_total_tax')} == SUM(Tax detail ${getLabelBySchemaId(schemaContent, 'tax_detail_tax')})' not fulfiled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ];
+
+};
+
+
+
+/* ---- Amounts vs. Line items ---- */
+
+// Rule 'Total Amount == SUM(Item Total Amount)''
+const totalAmountVsLineItemsAmountTotal = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkHeaderFieldEqualsTableColumnSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    headerFieldSchemaId = "amount_total",
+    tableColumnSchemaId = "item_amount_total",
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'amount_total')} == SUM(Line item ${getLabelBySchemaId(schemaContent, 'item_amount_total')})' not fulfiled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ];
+
+};
+
+
+// Rule 'Total Amount Base == SUM(Item Total Base)'
+const totalAmountBaseVsLineItemsAmountTotalBase = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkHeaderFieldEqualsTableColumnSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    headerFieldSchemaId = "amount_total_base",
+    tableColumnSchemaId = "item_total_base",
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'amount_total_base')}  == SUM(Line item ${getLabelBySchemaId(schemaContent, 'item_total_base')})' not fulfiled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ];
+
+};
+
+
+// Rule 'Total Amount Tax == SUM(Item Tax)'
+const totalAmountTaxVsLineItemsTax = (annotationContent, schemaContent, messages) => {
+
+  const newMessages = checkHeaderFieldEqualsTableColumnSum(
+    content = annotationContent,
+    schemaContent = schemaContent,
+    headerFieldSchemaId = "amount_total_tax",
+    tableColumnSchemaId = "item_tax",
+    messageType = "warning",
+    messageContent = `'${getLabelBySchemaId(schemaContent, 'amount_total_tax')} == SUM(Line item ${getLabelBySchemaId(schemaContent, 'item_tax')})' not fulfiled.`);
+
+  return [
+    ...messages,
+    ...newMessages
+  ];
+
+};
+
+
+// --- ROSSUM HOOK REQUEST HANDLER ---
+
+// The rossum_hook_request_handler is an obligatory main function that accepts
+// input and produces output of the rossum serverless function hook. Currently,
+// the only available programming language is Javascript executed on Node.js 12 environment.
+// @param {Object} annotation - see https://api.elis.rossum.ai/docs/#annotation-content-event-data-format
+// @param {Object} schemas - list of schemas that can be sideloaded. In most cases you would get only one schema.
+// @returns {Object} - the messages and operations that update the annotation content
+
+exports.rossum_hook_request_handler = ({
+  annotation: {
+    content
+  },
+  schemas: [
+    schema
+  ]
+}) => {
+
+  messages = main(content, schema.content);
+
+  // Return messages and operations to be used to update current annotation data
+  return {
+    messages
+  };
+};
+
+// --- HELPER FUNCTIONS ---
+
+// Return datapoints matching a schema id.
+// @param {Object} content - the annotation content tree (see https://api.elis.rossum.ai/docs/#annotation-data)
+// @param {string} schemaId - the field's ID as defined in the extraction schema(see https://api.elis.rossum.ai/docs/#document-schema)
+// @returns {Array} - the list of datapoints matching the schema ID
+
+const findBySchemaId = (content, schemaId) =>
+  content.reduce(
+    (results, dp) =>
+    dp.schema_id === schemaId ? [...results, dp] :
+    dp.children ? [...results, ...findBySchemaId(dp.children, schemaId)] :
+    results,
+    [],
+  );
+
+// Create a message which will be shown to the user
+// @param {number} datapointId - the id of the datapoint where the message will appear (null for "global" messages).
+// @param {String} messageType - the type of the message, any of {info|warning|error}. Errors prevent confirmation in the UI.
+// @param {String} messageContent - the message shown to the user
+// @returns {Object} - the JSON message definition (see https://api.elis.rossum.ai/docs/#annotation-content-event-response-format)
+
+const createMessage = (type, content, datapointId = null) => ({
+  content: content,
+  type: type,
+  id: datapointId,
+});
+
+// Go over Extraction schema (https://api.elis.rossum.ai/docs/#document-schema) and find the field's definition based on its ID.
+// @param {Object} content - schema content
+// @param {String} schemaId - the ID of the field to be found
+// @returns {Array} - array of found fields. [] if no field found. In most cases you would get a list with one dict specifying the field.
+const getSchemaFieldById = (content, schemaId) => {
+
+  // Handling simple multivalue
+  if (!Array.isArray(content)) {
+    return (getSchemaFieldById([content], schemaId))
+  }
+
+  return content.reduce(
+    (results, dp) =>
+    dp.id === schemaId ? [...results, dp] :
+    dp.children ? [...results, ...getSchemaFieldById(dp.children, schemaId)] :
+    results,
+    [],
+  )
+};
+
+// Get the Label of a field defined in Extraction schema by its ID.
+// @param {Object} content - schema content
+// @param {String} schemaId - the ID of the field to be found
+// @returns {String} - the label of the field. null if not found.
+const getLabelBySchemaId = (content, schemaId) => {
+
+  const ret = getSchemaFieldById(content, schemaId);
+
+  return ret.length == 0 ? null : ret[0].label;
+}
+
+// Take a list of schema IDs and say whether they are all defined in Extraction schema.
+// @param {Object} content - schema content
+// @param {String} schemaId - the ID of the field to be found
+// @returns {Boolean} - True if some schema ID not found in Extraction schema.
+const someSchemaIdsMissing = (content, schemaIds) => {
+
+  try {
+
+    const filtered = schemaIds.map(schemaId => getSchemaFieldById(content, schemaId)[0]).filter(x => (x != null && (x.hidden == null || (x.hidden != null && x.hidden == false))));
+
+    return filtered.length != schemaIds.length;
+  } catch (e) {
+    return true
+  }
+
+}
+
+
+// Check '[Field A + Field B + Field C + ...] == [Field D * Field E * ...]'
+// @param {Object} content - the annotation content tree (see https://api.elis.rossum.ai/docs/#annotation-data)
+// @param {Object} schemaContent - content of the schema listing individual fields defined in the schema.
+// @param {Array} leftFieldsSchemaIds - Schema IDs of the left expression.
+// @param {Array} rightFieldsSchemaIds - Schema IDs of the right expression.
+// @param {String} messageType - type of the message (info|warning|error).
+// @param {String} messageContent - the content of the message to be shown to the user.
+// @param {Number} epsilon - account some level of deviation.
+// @returns {Array} - list of messages to be shown to the user. 
+
+const checkLeftSumEqualsRightMultiplication = (content, schemaContent, leftFieldsSchemaIds, rightFieldsSchemaIds, messageType, messageContent, epsilon = 0) => {
+
+  if (someSchemaIdsMissing(schemaContent, leftFieldsSchemaIds.concat(rightFieldsSchemaIds))) {
+    return [];
+  }
+
+  // Get the datapoints of the given leftFieldsSchemaIds
+  // [[[Field A - 1],[ Field A - 2]], [[Field B - 1], [Field B - 2]], [[Field C -1][Field C - 2]] ]
+  const leftFieldsDatapoints = leftFieldsSchemaIds.map(schemaId => findBySchemaId(content, schemaId));
+  const rightFieldsDatapoints = rightFieldsSchemaIds.map(schemaId => findBySchemaId(content, schemaId));
+
+  let newMessages = [];
+
+  for (var i = 0; i < leftFieldsDatapoints[0].length; i++) {
+
+    // Select N-th value for all the fields
+    const leftExpression = leftFieldsDatapoints.map(d => d[i]).reduce(function(sum, datapoint) {
+      return sum + parseFloat(datapoint.content.normalized_value)
+    }, 0);
+
+    const rightExpression = rightFieldsDatapoints.map(d => d[i]).reduce(function(multiple, datapoint) {
+      return datapoint.schema_id.includes('_rate') ? multiple * parseFloat(datapoint.content.normalized_value) / 100 : multiple * parseFloat(datapoint.content.normalized_value)
+    }, 1);
+
+    if (leftExpression && rightExpression && Math.abs(leftExpression - rightExpression).toFixed(2) > epsilon) {
+
+      const _newMessages = [
+
+        ...leftFieldsDatapoints.map(fieldDatapoints => fieldDatapoints[i]).map(datapoint => createMessage(messageType, messageContent, datapoint.id)),
+        ...rightFieldsDatapoints.map(fieldDatapoints => fieldDatapoints[i]).map(datapoint => createMessage(messageType, messageContent, datapoint.id))
+
+      ];
+
+      newMessages = [
+        ...newMessages,
+        ..._newMessages
+      ];
+
+    }
+
+  };
+
+  return newMessages;
+
+};
+
+// Check '[Field A + Field B + Field C + ...] == [Field D + Field E + ...]'
+// @param {Object} content - the annotation content tree (see https://api.elis.rossum.ai/docs/#annotation-data)
+// @param {Object} schemaContent - content of the schema listing individual fields defined in the schema.
+// @param {Array} leftFieldsSchemaIds - Schema IDs of the left expression.
+// @param {Array} rightFieldsSchemaIds - Schema IDs of the right expression.
+// @param {String} messageType - type of the message (info|warning|error).
+// @param {String} messageContent - the content of the message to be shown to the user.
+// @param {Number} epsilon - account some level of deviation.
+// @returns {Array} - list of messages to be shown to the user. 
+
+const checkLeftSumEqualsRightSum = (content, schemaContent, leftFieldsSchemaIds, rightFieldsSchemaIds, messageType, messageContent, epsilon = 0) => {
+
+  if (someSchemaIdsMissing(schemaContent, leftFieldsSchemaIds.concat(rightFieldsSchemaIds))) {
+    return [];
+  }
+
+  // Get the datapoints of the given leftFieldsSchemaIds
+  // [[[Field A - 1],[ Field A - 2]], [[Field B - 1], [Field B - 2]], [[Field C -1][Field C - 2]] ]
+  const leftFieldsDatapoints = leftFieldsSchemaIds.map(schemaId => findBySchemaId(content, schemaId));
+  const rightFieldsDatapoints = rightFieldsSchemaIds.map(schemaId => findBySchemaId(content, schemaId));
+
+  let newMessages = [];
+
+  for (var i = 0; i < leftFieldsDatapoints[0].length; i++) {
+
+    // Select N-th value for all the fields
+    const leftExpression = leftFieldsDatapoints.map(d => d[i]).reduce(function(sum, datapoint) {
+      return sum + parseFloat(datapoint.content.normalized_value)
+    }, 0);
+
+    const rightExpression = rightFieldsDatapoints.map(d => d[i]).reduce(function(sum, datapoint) {
+      return sum + parseFloat(datapoint.content.normalized_value)
+    }, 0);
+
+    if (leftExpression && rightExpression && Math.abs(leftExpression - rightExpression).toFixed(2) > epsilon) {
+
+      const _newMessages = [
+
+        ...leftFieldsDatapoints.map(fieldDatapoints => fieldDatapoints[i]).map(datapoint => createMessage(messageType, messageContent, datapoint.id)),
+        ...rightFieldsDatapoints.map(fieldDatapoints => fieldDatapoints[i]).map(datapoint => createMessage(messageType, messageContent, datapoint.id))
+
+      ];
+
+      newMessages = [
+        ...newMessages,
+        ..._newMessages
+      ];
+
+    }
+
+  };
+
+  return newMessages;
+
+};
+
+// Check 'Header Field = SUM(Column Field)'
+// @param {Object} content - the annotation content tree (see https://api.elis.rossum.ai/docs/#annotation-data)
+// @param {Object} schemaContent - content of the schema listing individual fields defined in the schema.
+// @param {String} headerFieldSchemaId - Schema ID of the header field.
+// @param {String} tableColumnSchemaId - Schema ID of the column field.
+// @param {String} messageType - type of the message (info|warning|error).
+// @param {String} messageContent - the content of the message to be shown to the user.
+// @param {Number} epsilon - account some level of deviation.
+// @returns {Array} - list of messages to be shown to the user. 
+
+const checkHeaderFieldEqualsTableColumnSum = (content, schemaContent, headerFieldSchemaId, tableColumnSchemaId, messageType, messageContent, epsilon = 0) => {
+
+  if (someSchemaIdsMissing(schemaContent, [headerFieldSchemaId, tableColumnSchemaId])) {
+    return [];
+  }
+
+  // Get header field datapoint
+  const [headerFieldDatapoint] = findBySchemaId(
+    content,
+    headerFieldSchemaId,
+  );
+
+  // List of all datapoints belonging to the column ID
+  const tableColumnDatapoints = findBySchemaId(
+    content,
+    tableColumnSchemaId,
+  );
+
+  const headerFieldValue = parseFloat(headerFieldDatapoint.content.normalized_value);
+
+  let newMessages = [];
+
+  if (headerFieldValue && (tableColumnDatapoints.length > 0)) {
+
+    // Sum the values of the column
+    const tableColumnSum = tableColumnDatapoints.reduce(function(sum, datapoint) {
+      return sum + parseFloat(datapoint.content.normalized_value)
+    }, 0);
+
+    if (!Number.isNaN(tableColumnSum) && Math.abs(headerFieldValue - tableColumnSum).toFixed(2) > epsilon) {
+      newMessages.push(
+        createMessage(
+          messageType,
+          messageContent,
+          headerFieldDatapoint.id
+        )
+      );
+
+      // TODO: Show message in the column fields //
+    }
+  }
+
+  return newMessages;
+
+};
+
+// Check 'lowerBound <= (Left Fields - Right Fields) <= upperBound'
+// @param {Object} content - the annotation content tree (see https://api.elis.rossum.ai/docs/#annotation-data)
+// @param {Object} schemaContent - content of the schema listing individual fields defined in the schema.
+// @param {String} leftFieldSchemaId - Schema ID of the left field.
+// @param {String} rightFieldSchemaId - Schema ID of the right field.
+// @param {String} dataType - Datatype of the values (date|number)
+// @param {Number} lowerBound - lower bound of the expression.
+// @param {Number} upperBound - upper bound of the expression.
+// @param {String} messageType - type of the message (info|warning|error).
+// @param {String} messageContent - the content of the message to be shown to the user.
+// @returns {Array} - list of messages to be shown to the user. 
+
+const checkRightMinusLeftWithinRange = (content, schemaContent, leftFieldSchemaId, rightFieldSchemaId, dataType, lowerBound, upperBound, messageType, messageContent) => {
+
+  if (someSchemaIdsMissing(schemaContent, [leftFieldSchemaId, rightFieldSchemaId])) {
+    return [];
+  }
+
+  // Get a list of datapoints with the given schemaId
+  const leftDatapoints = findBySchemaId(content, leftFieldSchemaId);
+  const rightDatapoints = findBySchemaId(content, rightFieldSchemaId);
+
+  let newMessages = [];
+
+  // Loop over the values in case the schemaId contains multiple values (fields in line items ~ multivalue tuples)
+  for (var i = 0; i < leftDatapoints.length; i++) {
+
+    // Skip empty fields
+    if (leftDatapoints[i].content.normalized_value == null || rightDatapoints[i].content.normalized_value == null) {
+      continue;
+    }
+
+    if (dataType == "date") {
+      [year, month, day] = leftDatapoints[i].content.normalized_value.split("-");
+
+      const leftDate = new Date(year = year, month = month, day = day);
+
+      [year, month, day] = rightDatapoints[i].content.normalized_value.split("-");
+
+      const rightDate = new Date(year = year, month = month, day = day);
+
+
+      if (leftDate != null && rightDate != null) {
+
+        const datesDiffInDays = (leftDate - rightDate) / (1000 * 60 * 60 * 24);
+        if (datesDiffInDays > upperBound || datesDiffInDays < lowerBound) {
+
+          const _newMessages = [
+
+            ...leftDatapoints.map(datapoint => createMessage(messageType, messageContent, datapoint.id)),
+            ...rightDatapoints.map(datapoint => createMessage(messageType, messageContent, datapoint.id))
+
+          ];
+
+          newMessages = [
+            ...newMessages,
+            ..._newMessages
+          ];
+
+        }
+
+      }
+    }
+
+  };
+
+  return newMessages;
+
+}
