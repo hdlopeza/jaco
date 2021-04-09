@@ -1,0 +1,23 @@
+name: vision
+ 
+dependencies:
+    - python=3.8
+    - pip>=19.0
+    - pandas
+    - matplotlib
+    - pillow
+    - pylint
+    - ipython
+    - ipykernel
+    - autopep8
+
+
+# conda install -c conda-forge opencv
+# conda install -c conda-forge tesseract
+# conda install -c conda-forge camelot-py
+
+    # - pip
+    #     - numba
+
+# git rm --cached .vscode/settings.json
+# %time, %timeit and %%time

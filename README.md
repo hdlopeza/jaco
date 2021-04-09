@@ -55,7 +55,11 @@ octubre 27-2020
 * Otra vez tras varios meses muertos reinicio con toda a terminar el proyecto
 * Se define que YOLO hará parte del proyecto a fin de reconocer los campos de la factura
 
-mayo 27-2021
+marzo 27-2021
 
 * Si, otra vez iniciando, pero esta vez si, todo depende de ello
 * ya todo está consolidado en github
+
+Abril 9-2021
+
+* Regresé de nuevo a linux porque en windows hay mucho problema con las librerias de camelot
