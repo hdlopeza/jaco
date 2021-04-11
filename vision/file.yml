@@ -14,7 +14,9 @@ dependencies:
 
 # conda install -c conda-forge opencv
 # conda install -c conda-forge tesseract
+# conda install -c conda-forge pytesseract
 # conda install -c conda-forge camelot-py
+# pip install camelot-py[cv]
 
     # - pip
     #     - numba

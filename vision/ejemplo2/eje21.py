@@ -1,14 +1,17 @@
 #%%
 import os
 import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+import pytesseract
 
 # This only works if there's only one table on a page
 # Important parameters:
-MORPH_SIZE = (8, 8) #(8, 8)
+MORPH_SIZE = (2, 2) #(8, 8)
 MIN_TEXT_HEIGHT_LIMIT = 6 #6
 MAX_TEXT_HEIGHT_LIMIT = 40 #40
-CELL_THRESHOLD = 10 #10
-MIN_COLUMNS = 7 #2
+CELL_THRESHOLD = 19 #10
+MIN_COLUMNS = 2 #2
 
 def pre_process_image(img, save_in_file, morph_size=MORPH_SIZE):
 
