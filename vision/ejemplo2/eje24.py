@@ -1,7 +1,9 @@
+
 #%%
 
 import os
 import cv2
+import pytesseract
 
 def mostrar(image):
     # Using cv2.imshow() method 
@@ -16,8 +18,6 @@ def mostrar(image):
     cv2.destroyAllWindows() 
 
 in_file = os.path.join("data", "test3.png")
-
-#%%
 
 img = cv2.imread(os.path.join(in_file))
 img = img[785:1150, 70:1620]
@@ -47,6 +47,7 @@ for box in boxes:
     row_key = y // 10
     rows[row_key] = [box] if row_key not in rows else rows[row_key] + [box]
 
+
 boxes = []
 htemp = []
 for i in rows:
@@ -61,7 +62,7 @@ for i in rows:
         elif ((x2 - (x1 + w1)) > 29):
             boxes.append(box)
         else:
-            boxes[-1] = (x3, y3, w2+w3, h2)
+            boxes[-1] = (x3, y3, w2+w3 + (x2 - (x1 + w1)), h2)
         htemp.append(box)
 
 
@@ -89,11 +90,100 @@ for i in cols:
             boxes[-1] = (x2, y1, w1, h1+h2)
         htemp.append(box)
 
+# for box in boxes:
+#     (x, y, w, h) = box
+#     cv2.rectangle(imgx, (x, y), (x + w, y + h), (0, 0, 255), 1)
+
+# mostrar(imgx)
+
+
+
+# boxes1 = list(sorted(boxes, key=lambda r: (r[1], r[0])))
+cols1 = {}
 for box in boxes:
     (x, y, w, h) = box
-    cv2.rectangle(imgx, (x, y), (x + w, y + h), (0, 0, 255), 1)
+    row_key = x // 10
+    cols1[row_key] = [box] if row_key not in cols1 else cols1[row_key] + [box]
+
+# cols1
+
+
+punto = []
+for i in cols1:
+    x = []
+    y = []
+    for box in cols1.get(i):
+        x.append(box[0])
+        y.append(box[0] + box[2])
+
+    punto.append((min(x), max(y)))
+
+punto = sorted(punto)
+# punto
+
+punto_columna = []
+for i in range(len(punto)):
+    if i==0:
+        punto_columna.append(punto[i][0])
+    else:
+        punto_columna.append((punto[i-1][1] + punto[i][0])//2)
+punto_columna.append(punto[-1][1])
+# punto_columna
+
+boxes = list(sorted(boxes, key=lambda r: (r[1], r[0])))
+rows1 = {}
+for box in boxes:
+    (x, y, w, h) = box
+    row_key = y // 10
+    rows1[row_key] = [box] if row_key not in rows1 else rows1[row_key] + [box]
+
+# rows1
+
+
+punto = []
+for i in rows1:
+    x = []
+    y = []
+    for box in rows1.get(i):
+        x.append(box[1])
+        y.append(box[1] + box[3])
+
+    punto.append((min(x), max(y)))
+
+punto = sorted(punto)
+# punto
+
+
+punto_fila = []
+for i in range(len(punto)):
+    if i==0:
+        punto_fila.append(punto[i][0])
+    else:
+        punto_fila.append((punto[i-1][1] + punto[i][0])//2)
+punto_fila.append(punto[-1][1])
+# punto_fila
+
+
+
+for line in punto_fila:
+    x1 = punto_columna[0]
+    y1 = line
+    x2 = punto_columna[-1]
+    y2 = line
+    cv2.line(imgx, (x1, y1), (x2, y2), (0, 0, 255), 1)
+
+for line in punto_columna:
+    x1 = line
+    y1 = punto_fila[0]
+    x2 = line
+    y2 = punto_fila[-1]
+    cv2.line(imgx, (x1, y1), (x2, y2), (0, 0, 255), 1)
 
 mostrar(imgx)
+# %%
+punto_fila, punto_columna
+mostrar(imgx[6:49, 38:181])
 
-
+# %%
+pytesseract.image_to_string(imgx[6:49, 38:181])
 # %%
