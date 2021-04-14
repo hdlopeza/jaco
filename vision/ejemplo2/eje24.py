@@ -1,9 +1,11 @@
 
 #%%
-
 import os
+import re
 import cv2
 import pytesseract
+import numpy as np
+import pandas as pd
 
 def mostrar(image):
     # Using cv2.imshow() method 
@@ -165,25 +167,40 @@ punto_fila.append(punto[-1][1])
 
 
 
-for line in punto_fila:
-    x1 = punto_columna[0]
-    y1 = line
-    x2 = punto_columna[-1]
-    y2 = line
-    cv2.line(imgx, (x1, y1), (x2, y2), (0, 0, 255), 1)
+# for line in punto_fila:
+#     x1 = punto_columna[0]
+#     y1 = line
+#     x2 = punto_columna[-1]
+#     y2 = line
+#     cv2.line(imgx, (x1, y1), (x2, y2), (0, 0, 255), 1)
 
-for line in punto_columna:
-    x1 = line
-    y1 = punto_fila[0]
-    x2 = line
-    y2 = punto_fila[-1]
-    cv2.line(imgx, (x1, y1), (x2, y2), (0, 0, 255), 1)
+# for line in punto_columna:
+#     x1 = line
+#     y1 = punto_fila[0]
+#     x2 = line
+#     y2 = punto_fila[-1]
+#     cv2.line(imgx, (x1, y1), (x2, y2), (0, 0, 255), 1)
 
-mostrar(imgx)
-# %%
-punto_fila, punto_columna
-mostrar(imgx[6:49, 38:181])
 
-# %%
-pytesseract.image_to_string(imgx[6:49, 38:181])
+celda = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
+# celdax = np.empty((len(punto_fila),len(punto_columna)), dtype='object')
+for i in range(len(punto_fila)):
+    for ii in range(len(punto_columna)):
+        try:
+            text = re.sub(r"[\n]|[\x0c]|[,]", "", 
+                          pytesseract.image_to_string(
+                              imgx[punto_fila[i]-3:punto_fila[i+1]+3, 
+                                   punto_columna[ii]-3:punto_columna[ii+1]+3],
+                              config='--psm 6'))
+            celda[i, ii] = text
+            # celdax[i, ii] = (punto_fila[i],punto_fila[i+1], '--' , punto_columna[ii],punto_columna[ii+1])
+        except:
+            pass
+
+pd.DataFrame(celda)
+
+# mostrar(imgx)
+
+
+
 # %%
