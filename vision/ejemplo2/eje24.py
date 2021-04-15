@@ -10,7 +10,7 @@ import pandas as pd
 #! HYPERPARAMETROS
 
 # ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 16, 29, 29]
-ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [0, 6, 40, 9, 20, 3]
+ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 9, 20, 2]
 
 def mostrar(titulo, image, boxess):
 
@@ -50,21 +50,21 @@ in_file = os.path.join("data", "test2.png")
 
 img = cv2.imread(os.path.join(in_file))
 # img = img[785:1150, 70:1620] # Fraccion de la imagen
-img = img[62:380, 20:527] # Fraccion de la imagen
+img = img[60:395, 20:530] # Fraccion de la imagen
 imgx = img.copy()
 
 
 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 img = cv2.GaussianBlur(img, (3, 3), 0)
 img = cv2.threshold(img, 250, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-# mostrar('1', img, [(0,0,0,0)])
+mostrar('1', img, [(0,0,0,0)])
 img1 = cv2.bitwise_not(img)
-# mostrar('2', img1, [(0,0,0,0)])
+mostrar('2', img1, [(0,0,0,0)])
 struct = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
 img1 = cv2.erode(img1, struct, iterations=ERODE_ITERATIONS)
-# mostrar('3', img1, [(0,0,0,0)])
+mostrar('3', img1, [(0,0,0,0)])
 img1 = cv2.dilate(img1, struct, anchor=(-1, -1), iterations=DILATE_ITERATIONS)
-# mostrar('4', img1, [(0,0,0,0)])
+mostrar('4', img1, [(0,0,0,0)])
 contours, hierarchy = cv2.findContours(img1, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 boxes = []
 for contour in contours:
@@ -74,7 +74,7 @@ for contour in contours:
     if HIGHT_MIN < h < HIGHT_MAX:
         boxes.append(box)
 
-# mostrar('5', imgx.copy(), boxes)
+mostrar('5', imgx.copy(), boxes)
 
 boxes = list(sorted(boxes, key=lambda r: (r[0], r[1])))
 rows = {}
@@ -83,7 +83,7 @@ for box in boxes:
     row_key = y // 10
     rows[row_key] = [box] if row_key not in rows else rows[row_key] + [box]
 
-# mostrar('6', imgx.copy(), boxes)
+mostrar('6', imgx.copy(), boxes)
 
 boxes = []
 htemp = []
@@ -102,7 +102,7 @@ for i in rows:
             boxes[-1] = (x3, y3, w2+w3 + (x2 - (x1 + w1)), h2)
         htemp.append(box)
 
-# mostrar('7', imgx.copy(), boxes)
+mostrar('7', imgx.copy(), boxes)
 
 boxes = list(sorted(boxes, key=lambda r: (str(r[0])[:2], r[1])))
 cols = {}
@@ -128,7 +128,8 @@ for i in cols:
             boxes[-1] = (x2, y1, w1, h1+h2)
         htemp.append(box)
 
-# mostrar('8', imgx.copy(), boxes)
+mostrar('8', imgx.copy(), boxes)
+
 
 boxes = list(sorted(boxes, key=lambda r: (r[1], r[0])))
 cols1 = {}
@@ -214,19 +215,19 @@ mostrar('9', _img, [(0,0,0,0)])
 #----------
 
 
-# celda = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
-# celdax = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
-# for i in range(len(punto_fila)):
-#     for ii in range(len(punto_columna)):
-#         try:
-#             text = re.sub(r"[\n]|[\x0c]|[,]", "", 
-#                           pytesseract.image_to_string(imgx[punto_fila[i]-3:punto_fila[i+1], punto_columna[ii]:punto_columna[ii+1]], config='--psm 6'))
-#             celda[i, ii] = text
-#             celdax[i, ii] = (punto_fila[i],punto_fila[i+1], '--' , punto_columna[ii],punto_columna[ii+1])
-#         except:
-#             pass
+celda = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
+celdax = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
+for i in range(len(punto_fila)):
+    for ii in range(len(punto_columna)):
+        try:
+            text = re.sub(r"[\n]|[\x0c]|[,]", "", 
+                          pytesseract.image_to_string(imgx[punto_fila[i]-3:punto_fila[i+1], punto_columna[ii]:punto_columna[ii+1]], config='--psm 6'))
+            celda[i, ii] = text
+            celdax[i, ii] = (punto_fila[i],punto_fila[i+1], '--' , punto_columna[ii],punto_columna[ii+1])
+        except:
+            pass
 
-# pd.DataFrame(celda)
+pd.DataFrame(celda)
 # pd.DataFrame(celdax)
 
 
