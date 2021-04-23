@@ -12,8 +12,8 @@ dependencies:
     - autopep8
 
 
-# conda install -c conda-forge opencv
-# conda install -c conda-forge pytesseract
+# conda install -c conda-forge opencv   --- ok win and linux
+# conda install -c conda-forge pytesseract   --- ok win
 # conda install -c conda-forge tesseract
 # sudo apt-get install tesseract-ocr --- ok funcionó
 # sudo apt-get install tesseract-ocr-spa -y
