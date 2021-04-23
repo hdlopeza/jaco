@@ -230,8 +230,6 @@ for i in range(len(punto_fila)):
 pd.DataFrame(celda)
 # pd.DataFrame(celdax)
 
-hernan prueba
-
 #%%
 img = imgx[22:43, 357:424]
 
@@ -246,7 +244,7 @@ img = cv2.dilate(img, struct, anchor=(-1, -1), iterations=DILATE_ITERATIONS)
 
 
 mostrar1('prueba', img)
-pytesseract.image_to_string(im, config='--psm 6')
+#pytesseract.image_to_string(im, config='--psm 6')
 
 
 # %%
