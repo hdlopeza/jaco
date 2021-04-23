@@ -230,6 +230,7 @@ for i in range(len(punto_fila)):
 pd.DataFrame(celda)
 # pd.DataFrame(celdax)
 
+hernan prueba
 
 #%%
 img = imgx[22:43, 357:424]
