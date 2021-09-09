@@ -1,6 +1,12 @@
+
+
+# %%
+# pip install "camelot-py[cv]"
+# https://www.ghostscript.com/download/gsdnld.html
 import camelot
 
 
+# %%
 
 file = r'foo.pdf'
 # tables = camelot.read_pdf(file, flavor='stream', table_areas=['5,510,600,380'], row_tol=5)
@@ -15,3 +21,4 @@ tables[0].df
 
 
 camelot.plot(tables[0], kind='grid').show()
+# %%

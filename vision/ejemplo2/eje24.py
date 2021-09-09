@@ -6,11 +6,30 @@ import cv2
 import pytesseract
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from PIL import Image
 
-#! HYPERPARAMETROSss
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# https://github.com/UB-Mannheim/tesseract/wiki
 
-# ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 16, 29, 29]
-ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 9, 20, 2]
+#%%
+#! HYPERPARAMETROS
+
+ARCHIVO = "test3.png"
+
+if ARCHIVO == "test3.png":
+    ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 16, 29, 29]
+    in_file = os.path.join("data", ARCHIVO)
+    img = cv2.imread(os.path.join(in_file))
+    img = img[785:1150, 70:1620] # Fraccion de la imagen
+    imgx = img.copy()
+if ARCHIVO == "test2.png":
+    ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 9, 20, 2]
+    in_file = os.path.join("data", ARCHIVO)
+    img = cv2.imread(os.path.join(in_file))
+    img = img[60:395, 20:530] # Fraccion de la imagen
+    imgx = img.copy()
+
 
 def mostrar(titulo, image, boxess):
 
@@ -41,18 +60,6 @@ def mostrar1(titulo, image):
     
     #closing all open windows 
     cv2.destroyAllWindows() 
-
-
-
-# in_file = os.path.join("data", "test3.png")
-in_file = os.path.join("data", "test2.png")
-
-
-img = cv2.imread(os.path.join(in_file))
-# img = img[785:1150, 70:1620] # Fraccion de la imagen
-img = img[60:395, 20:530] # Fraccion de la imagen
-imgx = img.copy()
-
 
 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 img = cv2.GaussianBlur(img, (3, 3), 0)
@@ -221,7 +228,7 @@ for i in range(len(punto_fila)):
     for ii in range(len(punto_columna)):
         try:
             text = re.sub(r"[\n]|[\x0c]|[,]", "", 
-                          pytesseract.image_to_string(imgx[punto_fila[i]-3:punto_fila[i+1], punto_columna[ii]:punto_columna[ii+1]], config='--psm 6'))
+                          pytesseract.image_to_string(imgx[punto_fila[i]-3:punto_fila[i+1], punto_columna[ii]:punto_columna[ii+1]], config='--oem 1 --psm 6'))
             celda[i, ii] = text
             celdax[i, ii] = (punto_fila[i],punto_fila[i+1], '--' , punto_columna[ii],punto_columna[ii+1])
         except:
@@ -229,22 +236,6 @@ for i in range(len(punto_fila)):
 
 pd.DataFrame(celda)
 # pd.DataFrame(celdax)
-
-#%%
-img = imgx[22:43, 357:424]
-
-img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-img = cv2.GaussianBlur(img, (3, 3), 0)
-img = cv2.threshold(img, 250, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-# img = cv2.bitwise_not(img)
-struct = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 1))
-img = cv2.erode(img, struct, iterations=ERODE_ITERATIONS)
-img = cv2.dilate(img, struct, anchor=(-1, -1), iterations=DILATE_ITERATIONS)
-
-
-
-mostrar1('prueba', img)
 #pytesseract.image_to_string(im, config='--psm 6')
 
 
-# %%
