@@ -23,12 +23,7 @@ if ARCHIVO == "test3.png":
     img = cv2.imread(os.path.join(in_file))
     img = img[785:1150, 70:1620] # Fraccion de la imagen
     imgx = img.copy()
-if ARCHIVO == "test2.png":
-    ERODE_ITERATIONS, DILATE_ITERATIONS, HIGHT_MAX, HIGHT_MIN, THRESHOLD_COLUMN, THRESHOLD_ROW = [1, 6, 40, 9, 20, 2]
-    in_file = os.path.join("data", ARCHIVO)
-    img = cv2.imread(os.path.join(in_file))
-    img = img[60:395, 20:530] # Fraccion de la imagen
-    imgx = img.copy()
+
 
 
 def mostrar(titulo, image, boxess):
@@ -225,17 +220,19 @@ mostrar('9', _img, [(0,0,0,0)])
 celda = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
 celdax = np.empty((len(punto_fila) - 1,len(punto_columna) - 1), dtype='object')
 for i in range(len(punto_fila)):
-    for ii in range(len(punto_columna)):
-        try:
-            text = re.sub(r"[\n]|[\x0c]|[,]", "", 
-                          pytesseract.image_to_string(imgx[punto_fila[i]-3:punto_fila[i+1], punto_columna[ii]:punto_columna[ii+1]], config='--oem 1 --psm 6'))
-            celda[i, ii] = text
-            celdax[i, ii] = (punto_fila[i],punto_fila[i+1], '--' , punto_columna[ii],punto_columna[ii+1])
-        except:
+    # for ii in range(len(punto_columna)):
+    #     try:
+    #         text = re.sub(r"[\n]|[\x0c]|[,]", "", 
+    #                       pytesseract.image_to_string(imgx[punto_fila[i]-3:punto_fila[i+1], punto_columna[ii]:punto_columna[ii+1]], config='--oem 1 --psm 6'))
+    #         celda[i, ii] = text
+    #         celdax[i, ii] = (punto_fila[i],punto_fila[i+1], '--' , punto_columna[ii],punto_columna[ii+1])
+    #     except:
             pass
 
-pd.DataFrame(celda)
+# pd.DataFrame(celda)
 # pd.DataFrame(celdax)
 #pytesseract.image_to_string(im, config='--psm 6')
 
 
+
+# %%
