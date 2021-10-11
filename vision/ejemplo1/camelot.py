@@ -1,9 +1,11 @@
 # %%
 # pip install "camelot-py[cv]"
 # https://www.ghostscript.com/download/gsdnld.html
-import camelot
 import os
+import camelot
 
+
+#%%
 file = os.path.join("data", r'foo.pdf')
 # tables = camelot.read_pdf(file, flavor='stream', table_areas=['5,510,600,380'], row_tol=5)
 tables = camelot.read_pdf(file)

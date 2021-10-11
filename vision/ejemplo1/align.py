@@ -9,12 +9,13 @@ https://www.geeksforgeeks.org/template-matching-using-opencv-in-python/
 
 
 #%%
-import numpy as np
-import imutils
-import cv2
 import os
+import cv2
+import imutils
+import numpy as np
 import matplotlib.pyplot as plt
 
+#%%
 
 def align_images(image, template, maxFeatures=500, keepPercent=0.2, debug=False):
 
@@ -35,7 +36,7 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2, debug=False)
     method = cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING
     matcher = cv2.DescriptorMatcher_create(method)
     matches = matcher.match(descsA, descsB, None)
-    
+
     # sort the matches by their distance (the smaller the distance,
     # the "more similar" the features are)
     matches = sorted(matches, key=lambda x:x.distance)

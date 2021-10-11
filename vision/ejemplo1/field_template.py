@@ -6,11 +6,11 @@ https://www.pyimagesearch.com/2020/09/07/ocr-a-document-form-or-invoice-with-tes
 
 #%%
 
-from align import align_images
-from collections import namedtuple
-import pytesseract
-import cv2
 import os
+import cv2
+from collections import namedtuple
+from align import align_images
+import pytesseract
 
 # %%
 

@@ -1,0 +1,45 @@
+name: vision
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+    - pip
+    - python=3.8
+    - pip>=19.0
+    - pandas
+    - matplotlib
+    - pillow
+    - pylint
+    - ipython
+    - ipykernel
+    - autopep8
+    - opencv
+    - imutils
+    - camelot-py
+    - pdf2image
+    - pytesseract
+    - jinja2
+
+# Se requiere instalar posteriormente este
+# conda install -c conda-forge imutils
+# conda install -c conda-forge camelot-py
+# conda install -c conda-forge pdf2image
+# conda install -c conda-forge pytesseract
+# conda install -c anaconda jinja2
+# pip install tensorflow
+# pip install --upgrade tensorflow-hub
+# pip install camelot-py[cv]
+
+
+#conda env create -f environment.yml
+#conda env update --prefix ./env --file requirements.yml --prune
+
+
+# conda install -c conda-forge opencv   --- ok win and linux
+# conda install -c conda-forge tesseract
+# sudo apt-get install tesseract-ocr --- ok funcionó
+# sudo apt-get install tesseract-ocr-spa -y
+#### tesseract --list-langs
+
+# git rm --cached .vscode/settings.json
+# %time, %timeit and %%time

@@ -1,9 +1,10 @@
+#%%
+import os
+import csv
 import cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import csv
-import os
 
 try:
     from PIL import Image
@@ -13,7 +14,7 @@ import pytesseract
 
 #read your file
 
-file=os.path.join('data', '7_out.jpg')
+file = os.path.join('data', '8.jpg')
 img = cv2.imread(file,0)
 img.shape
 
@@ -195,3 +196,4 @@ data = dataframe.style.set_properties(align="left")
 print(data)
 #Converting it in a excel-file
 # data.to_excel("/Users/marius/Desktop/output.xlsx")
+# %%

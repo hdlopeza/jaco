@@ -16,9 +16,9 @@ services:
   
   develop:
     image: tensorflow/tensorflow:1.14.0-py3-jupyter
-#    ports:
-#      - 8888:8888
-#      - 6006:6006
+   ports:
+     - 8888:8888
+     - 6006:6006
     volumes:
       - /Users/hdla/data:/data
       - ./mile:/code
