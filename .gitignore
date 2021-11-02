@@ -1,7 +1,8 @@
 # Data del modelo
-vision/object_detector/annotations/*
-vision/object_detector/models/*
-vision/object_detector/pre-trained-models/*
+vision/entrenamiento/annotations/*
+vision/entrenamiento/exported-models/*
+vision/entrenamiento/models/*
+vision/entrenamiento/pre-trained-models/*
 
 
 # Byte-compiled / optimized / DLL files
