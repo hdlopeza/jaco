@@ -1,8 +1,8 @@
 # Data del modelo
-vision/entrenamiento/annotations/*
-vision/entrenamiento/exported-models/*
-vision/entrenamiento/models/*
-vision/entrenamiento/pre-trained-models/*
+vision/e1_reconocimiento/annotations/*
+vision/e1_reconocimiento/exported-models/*
+vision/e1_reconocimiento/models/*
+vision/e1_reconocimiento/pre-trained-models/*
 
 
 # Byte-compiled / optimized / DLL files
