@@ -2,39 +2,56 @@
 
 # conda install -c conda-forge poppler
 # pip install pillow
+# conda install -c conda-forge pdf2image
 
+#%%
 import os
-from io import BytesIO
+import cv2
 from pdf2image import convert_from_path
-from PIL import Image
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
+# from io import BytesIO
+# from PIL import Image
 
-in_file = os.path.join("data", r'8.pdf')
-out_file = os.path.join("data", r'8_out.jpg')
+#%%
+
+in_file = os.path.join('../', "data", r'8.pdf')
+out_file = os.path.join('../', "data", r'8_out.jpg')
 pages = convert_from_path(in_file)
-[page.save(out_file, "JPEG") for page in pages]
-pages[0]
+pages[0].save(out_file, format="JPEG")
 
-with BytesIO() as f:
-    pages[0].save(f, format="jpeg")
-    f.seek(0)
-    img_page = Image.open(f)
+# pages[0]
+# [page.save(out_file, "JPEG") for page in pages]
 
-image = Image.open(out_file)
+# with BytesIO() as f:
+#     pages[0].save(f, format="jpeg")
+#     f.seek(0)
+#     img_page = Image.open(f)
+
+
+#%%
+
+image = cv2.imread(out_file)
+# image = Image.open(out_file)
+
+# %%
+
 # alto_fijo = 1024
 # alto_porcentaje = (alto_fijo / float(image.size[1]))
 # ancho_objetivo = int(float(image.size[0])* float(alto_porcentaje))
 # image_new = image.resize((ancho_objetivo, alto_fijo))
 # image_new.save("hh.jpg")
 
+
 ancho_fijo = 768
-ancho_porcentaje = (ancho_fijo / float(image.size[0]))
-alto_objetivo = int(float(image.size[1]) * float(ancho_porcentaje))
-image_new = image.resize((ancho_fijo, alto_objetivo))
+ancho_porcentaje = (ancho_fijo / float(image.shape[1]))
+alto_objetivo = int(float(image.shape[0]) * float(ancho_porcentaje))
+
+image_new = cv2.resize(image, (ancho_fijo, alto_objetivo))
+# image_new = image.resize((ancho_fijo, alto_objetivo))
 # image_new.save("hh1.jpg")
 
-pages[0].save(out_file, format="JPEG")
+# %%
 
-plotting = plt.imshow(pages[0])
-plt.show()
+cv2.imwrite(out_file, image_new)
+# %%

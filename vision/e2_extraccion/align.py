@@ -5,6 +5,9 @@ https://www.pyimagesearch.com/2020/08/31/image-alignment-and-registration-with-o
 
 Si no funciona probar
 https://www.geeksforgeeks.org/template-matching-using-opencv-in-python/
+
+pip install imutils
+porque hace un resize del ancho manteniendo el ratio de la altura
 """
 
 
@@ -13,7 +16,6 @@ import os
 import cv2
 import imutils
 import numpy as np
-import matplotlib.pyplot as plt
 
 #%%
 
@@ -76,18 +78,8 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2, debug=False)
     # return the aligned image
     return aligned
 
-def mostrar(image):
-    cv2.imshow("titulo", image)
-    cv2.waitKey(0) 
-    cv2.destroyAllWindows()
-
 # %%
-img = align_images(image=os.path.join("data", r'8_peque_rotated1.jpg'), 
-             template=os.path.join("data", r'8.jpg'),
+img = align_images(image=os.path.join('../', "data", r'8_rotated1.jpg'), 
+             template=os.path.join('../', "data", r'8.jpg'),
              debug=False)
-# %%
-mostrar(img)
-
-# %%
-plt.imshow(img)
 # %%
