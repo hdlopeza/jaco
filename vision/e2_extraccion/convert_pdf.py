@@ -15,22 +15,56 @@ from pdf2image import (convert_from_path, convert_from_bytes)
 # from io import BytesIO
 # from PIL import Image
 
-def pdf_a_imagen(folder, file):
+def pdf_a_imagen(file_in, file_out):
+    """Crea una imagen a partir de un documento pdf
 
-    _path = os.path.splitext(file)
+    Args:
+        file_in ([type]): [description]
+        file_out ([type]): [description]
+    """
 
-    _in = os.path.join(folder, file)
-    _out = os.path.join(folder, _path[0] + '_new.jpg')
-
-    pages = convert_from_bytes(pdf_file=open(_in, 'rb').read())
+    pages = convert_from_bytes(pdf_file=open(file_in, 'rb').read())
     image_new = np.asarray(pages[0])
+
+    image_new = change_resolution(imagen=image_new)
+
+    cv2.imwrite(file_out, image_new)
+
+
+def imagen_a_imagen(file_in, file_out):
+    """Se asegura que la resolucion sea la definida
+
+    Args:
+        folder ([type]): [description]
+        file ([type]): [description]
+        folder_out ([type]): [description]
+    """
+
+    image_new = cv2.imread(file_in)
+    image_new = change_resolution(imagen=image_new)
+
+    cv2.imwrite(file_out, image_new)
+
+def change_resolution(imagen):
+    """Se asegura que la imagen final siempre quede en la resolucion
+    objetivo
+
+    Args:
+        imagen ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+
+    image_new = imagen
 
     ancho_fijo = 768
     alto, ancho, canales = image_new.shape
     ancho_porcentaje = (ancho_fijo / ancho)
     alto_objetivo = int(float(alto) * float(ancho_porcentaje))
     image_new = cv2.resize(image_new, (ancho_fijo, alto_objetivo))
-    cv2.imwrite(_out, image_new)
+    
+    return image_new
 
 
 # %% Convertir imagenes desde una ruta dada
