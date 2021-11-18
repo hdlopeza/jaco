@@ -23,7 +23,7 @@ def recorre_carpeta(folder):
         for file in files:
             yield folder, file
 
-def ejecuta(folder, folder_out):
+def preprocesamiento_a_imagen(folder, folder_out):
     """Ejecuta la operacion de recorrer una carpeta
     y validar si el archivo pasa las pruebas para generar el documento
     """
@@ -59,7 +59,8 @@ def ejecuta(folder, folder_out):
             print('fin del lote')
             break
 
-ejecuta(CARPETA, CARPETA_DESTINO)
 
 
 # %%
+
+preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
