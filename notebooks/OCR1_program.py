@@ -1,5 +1,5 @@
-import agent_MILE as K
-import agent_MILE_toolbox as Kt
+import OCR_agent_MILE as K
+import OCR_agent_MILE_toolbox as Kt
 
 a = 6
 if a == 1:

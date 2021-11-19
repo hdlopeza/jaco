@@ -17,7 +17,11 @@ def recorre_carpeta(folder):
 
     Args:
         folder ([type]): [description]
+
+    Yields:
+        [type]: [description]
     """
+
 
     for (path, dirs, files) in os.walk(folder):
         for file in files:
@@ -50,7 +54,7 @@ def preprocesamiento_a_imagen(folder, folder_out):
 
             elif a != None:
                 imagen_a_imagen(file_in=_in, file_out=_out)
-                print('formato de archivo cambiado {}'.format(_file))
+                print('formato de archivo cambiado {} y se asegura la resolucion'.format(_file))
 
             else:
                 print('archivo {} no se puede procesar formato no es jpeg o pdf'.format(_file))
@@ -64,3 +68,4 @@ def preprocesamiento_a_imagen(folder, folder_out):
 # %%
 
 preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
+# %%
