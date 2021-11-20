@@ -4,13 +4,16 @@
 
 #%%
 import os
-import imghdr
-from convert_pdf import pdf_a_imagen, imagen_a_imagen
+import app.vision.imghdr as imghdr
+from app.vision.convert_pdf import pdf_a_imagen, imagen_a_imagen
+import app.reconocimiento.rnn as reconoce
+
 
 # creacion de variables globales
 
-CARPETA = 'data'
-CARPETA_DESTINO = 'data_imagenes'
+CARPETA = '../data'
+CARPETA_DESTINO = 'data'
+CARPETA_ERRORES = 'data_error'
 
 def recorre_carpeta(folder):
     """Recorre una carpeta y regresa un generador para usar de uno en uno
@@ -21,7 +24,6 @@ def recorre_carpeta(folder):
     Yields:
         [type]: [description]
     """
-
 
     for (path, dirs, files) in os.walk(folder):
         for file in files:
@@ -63,9 +65,40 @@ def preprocesamiento_a_imagen(folder, folder_out):
             print('fin del lote')
             break
 
+def reconocimiento_imagenes(folder, folder_out):
+
+    _ = recorre_carpeta(folder)
+
+    lista = []
+
+    while True:
+        try:
+            _folder, _file = next(_)
+            _in = os.path.join(_folder, _file)
+
+            lista.append(reconoce.nit_imagen(_in))
+
+        except StopIteration:
+            print('--- fin del lote ---')
+            return lista
+
+def clasificar_imagenes(lista, folder_out, limite=0.2):
+
+    lista_imagenes = []
+
+    for i in lista:
+        if i[1] < limite:
+            # Mover el archivo a la carpeta de errores
+            os.rename(i[2], folder_out + '/' + os.path.basename(i[2]))
+        else:
+            lista_imagenes.append(i)
+
+    return lista_imagenes
 
 
 # %%
 
 preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
+lista_imagenes = reconocimiento_imagenes(CARPETA_DESTINO, CARPETA_ERRORES)
+lista_imagenes = clasificar_imagenes(lista=lista_imagenes, folder_out=CARPETA_ERRORES)
 # %%
