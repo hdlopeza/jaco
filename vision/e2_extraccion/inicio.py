@@ -7,6 +7,7 @@ import os
 import app.vision.imghdr as imghdr
 from app.vision.convert_pdf import pdf_a_imagen, imagen_a_imagen
 import app.reconocimiento.rnn as reconoce
+# %matplotlib inline
 
 
 # creacion de variables globales
