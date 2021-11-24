@@ -7,6 +7,7 @@ import os
 import app.vision.imghdr as imghdr
 from app.vision.convert_pdf import pdf_a_imagen, imagen_a_imagen
 import app.reconocimiento.rnn as reconoce
+import app.db.database as db
 # %matplotlib inline
 
 
@@ -102,4 +103,13 @@ def clasificar_imagenes(lista, folder_out, limite=0.2):
 preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
 lista_imagenes = reconocimiento_imagenes(CARPETA_DESTINO, CARPETA_ERRORES)
 lista_imagenes = clasificar_imagenes(lista=lista_imagenes, folder_out=CARPETA_ERRORES)
+
+
 # %%
+
+# ya busca en la base de datos los campos que ya estan capturados
+# sigue hacer la alineacion pasar los bounding box y luego 
+
+db.busca_nit(8001304263)
+# %%
+

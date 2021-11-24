@@ -30,6 +30,7 @@ root:
 
  1. Son las librerias que se requieren para que el codigo funcione
  1. Son las librerias de preprocesamiento de datos
+ 1. Se requiere labelImg para hacer el taggin de las imagenes
 
  paginas por visitar
 - https://www.youtube.com/watch?v=IOI0o3Cxv9Q
