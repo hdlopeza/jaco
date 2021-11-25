@@ -20,6 +20,22 @@ import numpy as np
 #%%
 
 def align_images(image, template, maxFeatures=500, keepPercent=0.2, debug=False):
+    """Alinea las imagenes teniendi en cuenta un template
+
+    img = align_images(image=os.path.join('../', "data", r'8_rotated1.jpg'), 
+             template=os.path.join('../', "data", r'8.jpg'),
+             debug=False)
+
+    Args:
+        image ([type]): [description]
+        template ([type]): [description]
+        maxFeatures (int, optional): [description]. Defaults to 500.
+        keepPercent (float, optional): [description]. Defaults to 0.2.
+        debug (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
+    """
 
     image = cv2.imread(image)
     template = cv2.imread(template)
@@ -77,9 +93,3 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2, debug=False)
 
     # return the aligned image
     return aligned
-
-# %%
-img = align_images(image=os.path.join('../', "data", r'8_rotated1.jpg'), 
-             template=os.path.join('../', "data", r'8.jpg'),
-             debug=False)
-# %%

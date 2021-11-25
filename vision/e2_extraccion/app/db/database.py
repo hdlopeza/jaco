@@ -46,6 +46,8 @@ def inserta_dic(dic):
     db.upsert(dic, factura.nit == dic.get('nit'))
 
 def busca_nit(nit:int):
-
-    return db.search(factura.nit == nit)[0]['campos']
-    # return db.search(factura.nit == nit)
+    try:
+        # return db.search(factura.nit == nit)[0]['campos']
+        return db.search(factura.nit == nit)
+    except  IndexError:
+        print('no hay registros')
