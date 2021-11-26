@@ -9,7 +9,7 @@ https://www.pyimagesearch.com/2020/09/07/ocr-a-document-form-or-invoice-with-tes
 import os
 import cv2
 from collections import namedtuple
-from align import align_images
+from app.vision.align import align_images
 import pytesseract
 
 # %%

@@ -120,7 +120,7 @@ def alinear_imagenes(lista):
                 CARPETA_IMAGES_TEMPLATES,
                 record[0].get('img_template'))
             path_target = i[2]
-            image_new =align.align_images(
+            image_new = align.align_images(
                 image=path_target,
                 template=path_template)
 
@@ -128,6 +128,8 @@ def alinear_imagenes(lista):
 
         except IndexError:
             print('error en el registro {}'.format(i))
+
+
 
 
 preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
