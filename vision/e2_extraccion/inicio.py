@@ -5,13 +5,15 @@
 #%%
 import os
 import cv2
+import re
+import pytesseract
 from app.vision.convert_pdf import pdf_a_imagen, imagen_a_imagen
 import app.vision.imghdr as imghdr
 import app.reconocimiento.rnn as reconoce
 import app.db.database as db
 import app.vision.align as align
 
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 # %matplotlib inline
 
 
@@ -129,6 +131,57 @@ def alinear_imagenes(lista):
         except IndexError:
             print('error en el registro {}'.format(i))
 
+def ocr_imagenes(lista):
+    """Toma un cuadro de un sector y lo convierte
+    https://www.pyimagesearch.com/2020/09/07/ocr-a-document-form-or-invoice-with-tesseract-opencv-and-python/
+
+    lista = [('8001304263', 0.84001195, 'data/8001304263_new.jpg'),
+        ('8002126635', 0.6552293, 'data/8002126635_new.jpg'),
+        ('8110213537', 0.8046723, 'data/2-029_new.jpg'),
+        ('8001539937', 0.6190442, 'data/8001539937_new.jpg')]
+    """
+
+    for i in lista:
+        try:
+
+            results = {}
+
+            img = cv2.imread(i[2])
+            img_bound = img.copy()
+            height, weight, _ = img.shape
+
+            record = db.busca_nit(int(i[0]))[0].get('campos')
+
+            for ii in record:
+
+                y_min = int(ii.get('y_min')* height)
+                y_max = int(ii.get('y_max')* height)
+                x_min = int(ii.get('x_min')* weight)
+                x_max = int(ii.get('x_max')* weight)
+
+                roi = img[y_min:y_max , x_min:x_max]
+
+                roi = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
+
+                if ii.get('campo') == "detalle":
+                    print("se realiza con tabla sin rayas")
+
+                else:
+                    text = re.sub(
+                        r"[\n]|[\x0c]|[,]"
+                        , ""
+                        , pytesseract.image_to_string(roi, config='--oem 1 --psm 6')
+                        )
+                    results[ii.get('campo')] = text
+
+                # img_bound = cv2.rectangle(img_bound, (x_min, y_min), (x_max,y_max), (0,255,0), 2)
+
+            print(results)
+            # plt.imsave('hh.jpg', img_bound)
+
+
+        except IndexError:
+            print('error en el registro {}'.format(i))
 
 
 
@@ -136,7 +189,5 @@ preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
 lista_imagenes = reconocimiento_imagenes(CARPETA_DESTINO, CARPETA_ERRORES)
 lista_imagenes = clasificar_imagenes(lista=lista_imagenes, folder_out=CARPETA_ERRORES)
 alinear_imagenes(lista_imagenes)
+ocr_imagenes(lista_imagenes)
 
-
-# %%
-# ya es la etapa del reconocimiento

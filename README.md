@@ -63,3 +63,10 @@ marzo 27-2021
 Abril 9-2021
 
 * Regresé de nuevo a linux porque en windows hay mucho problema con las librerias de camelot
+
+Noviembre 26-2011
+
+* Estas semanas ha fluido bien el trabajo
+* Esta en el punto de revisar el OCR heuristico sin rayas para aplicarlo e integrarlo al codigo
+* se debe crear el el dict de respuesta general toda la informacion por cada linea de detalle
+* esta informacion es la que servira al proyecto de NPL
