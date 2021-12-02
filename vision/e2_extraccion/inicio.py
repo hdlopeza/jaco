@@ -9,6 +9,7 @@ import re
 import pytesseract
 from app.vision.convert_pdf import pdf_a_imagen, imagen_a_imagen
 import app.vision.imghdr as imghdr
+import app.vision.convert_pdf as cpdf
 import app.reconocimiento.rnn as reconoce
 import app.db.database as db
 import app.vision.align as align
@@ -125,6 +126,7 @@ def alinear_imagenes(lista):
             image_new = align.align_images(
                 image=path_target,
                 template=path_template)
+            # image_new = cpdf.change_resolution(image_new)
 
             cv2.imwrite(path_target, image_new)
 
@@ -191,3 +193,5 @@ lista_imagenes = clasificar_imagenes(lista=lista_imagenes, folder_out=CARPETA_ER
 alinear_imagenes(lista_imagenes)
 ocr_imagenes(lista_imagenes)
 
+
+# %%

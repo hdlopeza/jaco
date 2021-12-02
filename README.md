@@ -64,9 +64,15 @@ Abril 9-2021
 
 * Regresé de nuevo a linux porque en windows hay mucho problema con las librerias de camelot
 
-Noviembre 26-2011
+Noviembre 26-2021
 
 * Estas semanas ha fluido bien el trabajo
 * Esta en el punto de revisar el OCR heuristico sin rayas para aplicarlo e integrarlo al codigo
 * se debe crear el el dict de respuesta general toda la informacion por cada linea de detalle
 * esta informacion es la que servira al proyecto de NPL
+
+Diciembre 01-2021
+
+* Cambie la busqueda heuristica de la tabla por el uso de pytesseract con import_to_data y usando el dataframe para asociar campos comunes
+* Juntar todo el desarrollo de tabla_sin_rayas2 y dejar tabla_sin_rayas1 para posterior desarrollo de mejoras
+* mirar como documentar el codugo que queda empezado para futuras mejoras
