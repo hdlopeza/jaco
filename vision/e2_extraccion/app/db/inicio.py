@@ -1,6 +1,10 @@
 """
 Libreria que toma un archivo XML generado con labelImg y extrae la informacion de
 campos que será objeto de reconocimiento para posterior ingresarla en la base de datos
+
+OJO!!!
+en labelImg cuando se realice las areas de las columnas en la seccion de detalle, NO se pueden traslapar 
+areas, deben quedar independientes, asi sea por un pixel
 """
 
 # %% Importar librerias

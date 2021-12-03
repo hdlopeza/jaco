@@ -30,7 +30,7 @@
 		<difficult>0</difficult>
 		<bndbox>
 			<xmin>1</xmin>
-			<ymin>790</ymin>
+			<ymin>785</ymin>
 			<xmax>2125</xmax>
 			<ymax>2197</ymax>
 		</bndbox>
@@ -144,7 +144,7 @@
 		</bndbox>
 	</object>
 	<object>
-		<name>total_excento</name>
+		<name>total_exento</name>
 		<pose>Unspecified</pose>
 		<truncated>0</truncated>
 		<difficult>0</difficult>
@@ -201,6 +201,66 @@
 			<ymin>2507</ymin>
 			<xmax>2053</xmax>
 			<ymax>2547</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_codigo</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>78</xmin>
+			<ymin>788</ymin>
+			<xmax>424</xmax>
+			<ymax>1227</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_descripcion</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>434</xmin>
+			<ymin>788</ymin>
+			<xmax>1247</xmax>
+			<ymax>1215</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_cantidad</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1253</xmin>
+			<ymin>796</ymin>
+			<xmax>1478</xmax>
+			<ymax>1212</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_precio</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1490</xmin>
+			<ymin>801</ymin>
+			<xmax>1747</xmax>
+			<ymax>1215</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_valor</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1756</xmin>
+			<ymin>805</ymin>
+			<xmax>2096</xmax>
+			<ymax>1215</ymax>
 		</bndbox>
 	</object>
 </annotation>

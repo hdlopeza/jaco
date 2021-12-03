@@ -29,8 +29,8 @@
 		<truncated>1</truncated>
 		<difficult>0</difficult>
 		<bndbox>
-			<xmin>10</xmin>
-			<ymin>509</ymin>
+			<xmin>1</xmin>
+			<ymin>507</ymin>
 			<xmax>2125</xmax>
 			<ymax>894</ymax>
 		</bndbox>
@@ -189,6 +189,66 @@
 			<ymin>964</ymin>
 			<xmax>345</xmax>
 			<ymax>1012</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_codigo</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>83</xmin>
+			<ymin>512</ymin>
+			<xmax>331</xmax>
+			<ymax>801</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_descripcion</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>355</xmin>
+			<ymin>505</ymin>
+			<xmax>988</xmax>
+			<ymax>864</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_cantidad</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1004</xmin>
+			<ymin>507</ymin>
+			<xmax>1312</xmax>
+			<ymax>823</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_precio</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1331</xmin>
+			<ymin>505</ymin>
+			<xmax>1569</xmax>
+			<ymax>826</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>columna_valor</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>1731</xmin>
+			<ymin>507</ymin>
+			<xmax>1996</xmax>
+			<ymax>829</ymax>
 		</bndbox>
 	</object>
 </annotation>
