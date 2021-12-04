@@ -1,3 +1,0 @@
-docker_flags = ['-v', '/media/hdla/Documents/jaco:/project/data']
-tag = 'latest'
-variants = ['python3', 'gpu', 'jupyter']
