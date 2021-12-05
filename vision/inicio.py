@@ -17,6 +17,7 @@ import app.vision.align as align
 import matplotlib.pyplot as plt
 # %matplotlib inline
 
+#%%
 
 # creacion de variables globales
 

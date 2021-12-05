@@ -29,8 +29,18 @@ RUN apt-get update \
 # Python dependencies
 RUN pip3 install --upgrade pip
 RUN pip3 --no-cache-dir install \
-    numpy
+    numpy matplotlib pytesseract
 RUN python3 -m pip install -U --force-reinstall ipykernel
+RUN apt-get update
+
+# Opencv opcion1
+RUN apt-get install ffmpeg libsm6 libxext6 -y
+RUN pip install opencv-python
+# Opencv opcion2
+# RUN apt-get update && apt-get install -y python3-opencv
+# RUN pip install opencv-python
+
+# RUN python3 -m pip opencv-python-headless
 
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
 # to the Docker socket. The script will also execute CMD as needed.
