@@ -1,50 +1,34 @@
-FROM tensorflow/tensorflow:latest
+FROM tensorflow/tensorflow:nightly-gpu-jupyter
 
-ARG DEBIAN_FRONTEND=noninteractive
+RUN python -c "import tensorflow as tf; print(f'Tensorflow version: {tf.__version__}')"
 
-# Install apt dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    gpg-agent \
-    python3-cairocffi \
-    protobuf-compiler \
-    python3-pil \
-    python3-lxml \
-    python3-tk \
-    python3-opencv \
-    wget
+RUN apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        less \
+        zip && \
+    rm -rf /var/lib/apt/lists/*
 
-# Installs google cloud sdk, this is mostly for using gsutil to export model.
-RUN wget -nv \
-    https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz && \
-    mkdir /root/tools && \
-    tar xvzf google-cloud-sdk.tar.gz -C /root/tools && \
-    rm google-cloud-sdk.tar.gz && \
-    /root/tools/google-cloud-sdk/install.sh --usage-reporting=false \
-        --path-update=false --bash-completion=false \
-        --disable-installation-options && \
-    rm -rf /root/.config/* && \
-    ln -s /root/.config /config && \
-    rm -rf /root/tools/google-cloud-sdk/.install/.backup
+# Trick pip into thinking that the 'tensorflow' package is installed.
+# Installing `object_detection` attempts to install the 'tensorflow' package.
+# Name the symlink with the suffix from tf_nightly_gpu.
+WORKDIR /usr/local/lib/python3.6/dist-packages
+RUN ln -s tf_nightly_gpu-* tensorflow-$(ls -d1 tf_nightly_gpu* | sed 's/tf_nightly_gpu-\(.*\)/\1/')
 
-# Path configuration
-ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
-# Make sure gsutil will use the default service account
-RUN echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg
+WORKDIR /tf
+RUN curl -L -O https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-linux-x86_64.zip && \
+    unzip protoc-3.11.4-linux-x86_64.zip && \
+    cp bin/protoc /usr/local/bin && \
+    rm -r protoc-3.11.4-linux-x86_64.zip bin/
 
-WORKDIR /home/tensorflow
+# Upgrade pip.
+RUN python -m pip install --no-cache-dir --upgrade pip
 
-## Copy this code (make sure you are under the ../models/research directory)
-COPY . /home/tensorflow/models
+RUN git clone --depth 1 https://github.com/tensorflow/models
+WORKDIR models/research
+RUN protoc object_detection/protos/*.proto --python_out=. && \
+    cp object_detection/packages/tf2/setup.py . && \
+    python -m pip install  --no-cache-dir .
 
-# Compile protobuf configs
-RUN (cd /home/tensorflow/models/ && protoc object_detection/protos/*.proto --python_out=.)
-WORKDIR /home/tensorflow/models/
-
-RUN cp object_detection/packages/tf2/setup.py ./
-ENV PATH="/home/tensorflow/.local/bin:${PATH}"
-
-RUN python -m pip install -U pip
-RUN python -m pip install .
-
-ENTRYPOINT ["python", "object_detection/model_main_tf2.py"]
+RUN python -c "import tensorflow as tf; print(f'Tensorflow version: {tf.__version__}')"

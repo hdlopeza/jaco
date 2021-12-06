@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # creacion de variables globales
 
-CARPETA = '../data'
+CARPETA = 'data_origen'
 CARPETA_DESTINO = 'data'
 CARPETA_ERRORES = 'data_error'
 CARPETA_IMAGES_TEMPLATES = 'app/db/templates'
