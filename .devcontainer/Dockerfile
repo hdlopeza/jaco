@@ -1,52 +1,50 @@
-# Note: You can use any Debian/Ubuntu based image you want. 
-FROM docker.io/tensorflow/tensorflow:latest
+FROM tensorflow/tensorflow:latest-gpu
 
-# [Option] Install zsh
-ARG INSTALL_ZSH="true"
-# [Option] Upgrade OS packages to their latest versions
-ARG UPGRADE_PACKAGES="false"
-# [Option] Enable non-root Docker access in container
-ARG ENABLE_NONROOT_DOCKER="true"
-# [Option] Use the OSS Moby CLI instead of the licensed Docker CLI
-ARG USE_MOBY="true"
+ARG DEBIAN_FRONTEND=noninteractive
 
-# Enable new "BUILDKIT" mode for Docker CLI
-ENV DOCKER_BUILDKIT=1
+# Install apt dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    gpg-agent \
+    python3-cairocffi \
+    protobuf-compiler \
+    python3-pil \
+    python3-lxml \
+    python3-tk \
+    python3-opencv \
+    wget
 
-# Install needed packages and setup non-root user. Use a separate RUN statement to add your
-# own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
-ARG USERNAME=automatic
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-COPY library-scripts/*.sh /tmp/library-scripts/
-RUN apt-get update \
-    && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
-    # Use Docker script from script library to set things up
-    && /bin/bash /tmp/library-scripts/docker-debian.sh "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}" \
-    # Clean up
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
+# Installs google cloud sdk, this is mostly for using gsutil to export model.
+RUN wget -nv \
+    https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz && \
+    mkdir /root/tools && \
+    tar xvzf google-cloud-sdk.tar.gz -C /root/tools && \
+    rm google-cloud-sdk.tar.gz && \
+    /root/tools/google-cloud-sdk/install.sh --usage-reporting=false \
+        --path-update=false --bash-completion=false \
+        --disable-installation-options && \
+    rm -rf /root/.config/* && \
+    ln -s /root/.config /config && \
+    rm -rf /root/tools/google-cloud-sdk/.install/.backup
 
-# Python dependencies
-RUN pip3 install --upgrade pip
-RUN pip3 --no-cache-dir install \
-    numpy matplotlib pytesseract
-RUN python3 -m pip install -U --force-reinstall ipykernel
-RUN apt-get update
+# Path configuration
+ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
+# Make sure gsutil will use the default service account
+RUN echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg
 
-# Opencv opcion1
-RUN apt-get install ffmpeg libsm6 libxext6 -y
-RUN pip install opencv-python
-# Opencv opcion2
-# RUN apt-get update && apt-get install -y python3-opencv
-# RUN pip install opencv-python
+WORKDIR /home/tensorflow
 
-# RUN python3 -m pip opencv-python-headless
+## Copy this code (make sure you are under the ../models/research directory)
+COPY . /home/tensorflow/models
 
-# Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
-# to the Docker socket. The script will also execute CMD as needed.
-ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-CMD [ "sleep", "infinity" ]
+# Compile protobuf configs
+RUN (cd /home/tensorflow/models/ && protoc object_detection/protos/*.proto --python_out=.)
+WORKDIR /home/tensorflow/models/
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+RUN cp object_detection/packages/tf2/setup.py ./
+ENV PATH="/home/tensorflow/.local/bin:${PATH}"
+
+RUN python -m pip install -U pip
+RUN python -m pip install .
+
+ENTRYPOINT ["python", "object_detection/model_main_tf2.py"]
