@@ -27,26 +27,30 @@ RUN apt-get update \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
 
-cd home
-mkdir tensorflow
-cd tensorflow
-git clone https://github.com/tensorflow/models.git
+# Install Tensorflow Object Detection API
+WORKDIR /home/pb
+RUN curl -L -O https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip && \
+    unzip protoc-3.19.1-linux-x86_64.zip
+ENV PATH=$PATH:/home/pb/bin/
 
-cd ..
-mkdir pb
-cd pb
-wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip
-unzip protoc-3.19.1-linux-x86_64.zip
-export PATH=$PATH:/home/pb/bin/
+RUN python -m pip install --upgrade pip
 
-cd /home/tensorflow/models/research
-protoc object_detection/protos/*.proto --python_out=.
-cp object_detection/packages/tf2/setup.py .
-python -m pip install --upgrade pip
-python -m pip install --use-feature=2020-resolver .
+WORKDIR /home/tensorflow
+RUN git clone --depth 1 https://github.com/tensorflow/models
+WORKDIR /home/tensorflow/models/research
+RUN protoc object_detection/protos/*.proto --python_out=. && \
+    cp object_detection/packages/tf2/setup.py . && \
+    python -m pip install --use-feature=2020-resolver .
 
+# Install Opencv
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6 poppler-utils tesseract-ocr -y
 
-
+# Python dependencies
+RUN pip3 install --upgrade pip \
+    matplotlib pdf2image \
+    tinydb pandas imutils ipykernel \
+    opencv-python pytesseract
 
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
 # to the Docker socket. The script will also execute CMD as needed.
