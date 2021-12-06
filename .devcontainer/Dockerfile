@@ -27,6 +27,28 @@ RUN apt-get update \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
 
+cd home
+mkdir tensorflow
+cd tensorflow
+git clone https://github.com/tensorflow/models.git
+
+cd ..
+mkdir pb
+cd pb
+wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protoc-3.19.1-linux-x86_64.zip
+unzip protoc-3.19.1-linux-x86_64.zip
+export PATH=$PATH:/home/pb/bin/
+
+cd /home/tensorflow/models/research
+protoc object_detection/protos/*.proto --python_out=.
+cp object_detection/packages/tf2/setup.py .
+python -m pip install --upgrade pip
+python -m pip install --use-feature=2020-resolver .
+
+
+
+cd models
+
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
 # to the Docker socket. The script will also execute CMD as needed.
 ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
