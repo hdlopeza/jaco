@@ -1,34 +1,37 @@
-FROM tensorflow/tensorflow:nightly-gpu-jupyter
+# Note: You can use any Debian/Ubuntu based image you want. DF4
+FROM docker.io/tensorflow/tensorflow:latest
 
-RUN python -c "import tensorflow as tf; print(f'Tensorflow version: {tf.__version__}')"
+# [Option] Install zsh
+ARG INSTALL_ZSH="true"
+# [Option] Upgrade OS packages to their latest versions
+ARG UPGRADE_PACKAGES="false"
+# [Option] Enable non-root Docker access in container
+ARG ENABLE_NONROOT_DOCKER="tr,ue"
+# [Option] Use the OSS Moby CLI instead of the licensed Docker CLI
+ARG USE_MOBY="true"
 
-RUN apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl \
-        git \
-        less \
-        zip && \
-    rm -rf /var/lib/apt/lists/*
+# Enable new "BUILDKIT" mode for Docker CLI
+ENV DOCKER_BUILDKIT=1
 
-# Trick pip into thinking that the 'tensorflow' package is installed.
-# Installing `object_detection` attempts to install the 'tensorflow' package.
-# Name the symlink with the suffix from tf_nightly_gpu.
-WORKDIR /usr/local/lib/python3.6/dist-packages
-RUN ln -s tf_nightly_gpu-* tensorflow-$(ls -d1 tf_nightly_gpu* | sed 's/tf_nightly_gpu-\(.*\)/\1/')
+# Install needed packages and setup non-root user. Use a separate RUN statement to add your
+# own dependencies. A user of "automatic" attempts to reuse an user ID if one already exists.
+ARG USERNAME=automatic
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+COPY library-scripts/*.sh /tmp/library-scripts/
+RUN apt-get update \
+    && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+    # Use Docker script from script library to set things up
+    && /bin/bash /tmp/library-scripts/docker-debian.sh "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}" \
+    # Clean up
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
-WORKDIR /tf
-RUN curl -L -O https://github.com/protocolbuffers/protobuf/releases/download/v3.11.4/protoc-3.11.4-linux-x86_64.zip && \
-    unzip protoc-3.11.4-linux-x86_64.zip && \
-    cp bin/protoc /usr/local/bin && \
-    rm -r protoc-3.11.4-linux-x86_64.zip bin/
 
-# Upgrade pip.
-RUN python -m pip install --no-cache-dir --upgrade pip
+# Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
+# to the Docker socket. The script will also execute CMD as needed.
+ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
+CMD [ "sleep", "infinity" ]
 
-RUN git clone --depth 1 https://github.com/tensorflow/models
-WORKDIR models/research
-RUN protoc object_detection/protos/*.proto --python_out=. && \
-    cp object_detection/packages/tf2/setup.py . && \
-    python -m pip install  --no-cache-dir .
-
-RUN python -c "import tensorflow as tf; print(f'Tensorflow version: {tf.__version__}')"
+# [Optional] Uncomment this section to install additional OS packages.
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && apt-get -y install --no-install-recommends <your-package-list-here>

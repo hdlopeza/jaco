@@ -1,4 +1,4 @@
-# Note: You can use any Debian/Ubuntu based image you want. DF1
+# Note: You can use any Debian/Ubuntu based image you want. DF4
 FROM docker.io/tensorflow/tensorflow:latest
 
 # [Option] Install zsh
@@ -26,56 +26,6 @@ RUN apt-get update \
     # Clean up
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
-# # Opencv opcion1
-RUN apt-get update
-RUN apt-get install ffmpeg libsm6 libxext6 -y
-
-# Python dependencies
-RUN pip3 install --upgrade pip \
-    numpy matplotlib pytesseract pdf2image \
-    tinydb pandas imutils ipykernel \
-    opencv-python \
-    protobuf-compiler six pillow
-
-
-# --------------
-
-# # object_detection tensorflow api
-# # Install apt dependencies
-# RUN apt-get install -y \
-#     gpg-agent \
-#     python3-cairocffi \
-#     protobuf-compiler \
-#     python3-pil \
-#     python3-lxml \
-#     python3-tk \
-#     wget
-
-# # Install gcloud and gsutil commands
-
-
-# # Add new user to avoid running as root
-# # RUN useradd -ms /bin/bash tensorflow
-# # USER tensorflow
-# WORKDIR /home/tensorflow
-
-# # Copy this version of of the model garden into the image
-# RUN git clone https://github.com/tensorflow/models.git /home/tensorflow/models
-# # COPY --chown=tensorflow . /home/tensorflow/models
-
-# # Compile protobuf configs
-# # RUN (cd /home/tensorflow/models/research/ && protoc object_detection/protos/*.proto --python_out=.)
-# WORKDIR /home/tensorflow/models/research/
-
-# RUN cp object_detection/packages/tf2/setup.py ./
-# ENV PATH="/home/tensorflow/.local/bin:${PATH}"
-
-# RUN python -m pip install -U pip
-# RUN python -m pip install .
-
-# ENV TF_CPP_MIN_LOG_LEVEL 3
-
-# --------------
 
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
 # to the Docker socket. The script will also execute CMD as needed.
