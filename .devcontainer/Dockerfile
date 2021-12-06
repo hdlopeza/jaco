@@ -47,7 +47,6 @@ python -m pip install --use-feature=2020-resolver .
 
 
 
-cd models
 
 # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
 # to the Docker socket. The script will also execute CMD as needed.
