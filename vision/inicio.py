@@ -196,3 +196,9 @@ ocr_imagenes(lista_imagenes)
 
 
 # %%
+# Eliminar imagenes temporales
+# !rm -r data/*
+# !rm -r data_error/*
+
+
+# %%
