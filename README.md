@@ -76,3 +76,7 @@ Diciembre 01-2021
 * Cambie la busqueda heuristica de la tabla por el uso de pytesseract con import_to_data y usando el dataframe para asociar campos comunes
 * Juntar todo el desarrollo de tabla_sin_rayas2 y dejar tabla_sin_rayas1 para posterior desarrollo de mejoras
 * mirar como documentar el codugo que queda empezado para futuras mejoras
+
+Diciembre 08-2021
+
+* Despues de intentar mucho, ya esta el docker listo cuando requiera desarrollo por fuera de la maquina principal
