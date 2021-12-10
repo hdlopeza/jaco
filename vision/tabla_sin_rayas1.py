@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from PIL import Image
 plt.rcParams['figure.figsize'] = [30, 10]
 
-import app.db.database as db
+import app_db as db
 
 
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"

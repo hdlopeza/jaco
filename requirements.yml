@@ -1,24 +1,24 @@
-name: vision
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-    - pip
-    - python=3.8
-    - pip>=19.0
-    - pandas
-    - matplotlib
-    - pillow
-    - pylint
-    - ipython
-    - ipykernel
-    - autopep8
-    - opencv
-    - imutils
-    - camelot-py
-    - pdf2image
-    - pytesseract
-    - jinja2
+# name: vision
+# channels:
+#   - conda-forge
+#   - defaults
+# dependencies:
+#     - pip
+#     - python=3.8
+#     - pip>=19.0
+#     - pandas
+#     - matplotlib
+#     - pillow
+#     - pylint
+#     - ipython
+#     - ipykernel
+#     - autopep8
+#     - opencv
+#     - imutils
+#     - camelot-py
+#     - pdf2image
+#     - pytesseract
+#     - jinja2
 
 # conda install -c conda-forge opencv   --- ok win and linux
 

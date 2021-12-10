@@ -11,7 +11,7 @@ areas, deben quedar independientes, asi sea por un pixel
 
 import os
 import xml.etree.ElementTree as ET
-from database import inserta_dic
+from app_db import inserta_dic
 
 
 # %%

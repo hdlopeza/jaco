@@ -7,12 +7,12 @@ import os
 import cv2
 import re
 import pytesseract
-from app.vision.convert_pdf import pdf_a_imagen, imagen_a_imagen
-import app.vision.imghdr as imghdr
-import app.vision.convert_pdf as cpdf
-import app.reconocimiento.rnn as reconoce
-import app.db.database as db
-import app.vision.align as align
+from app_vision_convertpdf import pdf_a_imagen, imagen_a_imagen
+import app_vision_imghdr as app_vision_imghdr
+import app_vision_convertpdf as cpdf
+import app_rnn as reconoce
+import app_db as db
+import app_vision_align as app_vision_align
 
 import matplotlib.pyplot as plt
 # %matplotlib inline
@@ -56,7 +56,7 @@ def preprocesamiento_a_imagen(folder, folder_out):
             _in = os.path.join(folder, _file)
             _out = os.path.join(folder_out, _path[0] + '_new.jpg')
 
-            a = imghdr.what(os.path.join(_folder, _file))
+            a = app_vision_imghdr.what(os.path.join(_folder, _file))
 
             if _file.lower().endswith(('pdf')):
                 pdf_a_imagen(file_in=_in, file_out=_out)
@@ -124,7 +124,7 @@ def alinear_imagenes(lista):
                 CARPETA_IMAGES_TEMPLATES,
                 record[0].get('img_template'))
             path_target = i[2]
-            image_new = align.align_images(
+            image_new = app_vision_align.align_images(
                 image=path_target,
                 template=path_template)
             # image_new = cpdf.change_resolution(image_new)

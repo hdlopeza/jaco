@@ -30,7 +30,6 @@ def pdf_a_imagen(file_in, file_out):
 
     cv2.imwrite(file_out, image_new)
 
-
 def imagen_a_imagen(file_in, file_out):
     """Se asegura que la resolucion sea la definida
 

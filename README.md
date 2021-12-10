@@ -80,3 +80,7 @@ Diciembre 01-2021
 Diciembre 08-2021
 
 * Despues de intentar mucho, ya esta el docker listo cuando requiera desarrollo por fuera de la maquina principal
+
+Diciembre 10-2021
+
+* Voy aplanar la estructura de archivos porque esta generando problema con las rutas de acceso
