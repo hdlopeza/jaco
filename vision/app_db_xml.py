@@ -11,24 +11,11 @@ areas, deben quedar independientes, asi sea por un pixel
 
 import os
 import xml.etree.ElementTree as ET
+from app_misc import recorre_carpeta
 from app_db import inserta_dic
 
 
 # %%
-
-def recorre_carpeta(folder):
-    """Recorre una carpeta y regresa un generador para usar de uno en uno
-
-    Args:
-        folder ([type]): [description]
-
-    Yields:
-        [type]: [description]
-    """
-
-    for (path, dirs, files) in os.walk(folder):
-        for file in files:
-            yield folder, file
 
 def ingresa_xml(folder):
 
@@ -42,6 +29,7 @@ def ingresa_xml(folder):
                 file = _file
 
                 xml_list = []
+                xml_list1 = []
                 tree = ET.parse(os.path.join(_folder, file))
                 root = tree.getroot()
                 filename = root.find('filename').text
@@ -50,7 +38,7 @@ def ingresa_xml(folder):
 
                 for member in root.findall('object'):
                     bndbox = member.find('bndbox')
-                    if (member.find('name').text == 'logo'): continue
+
                     value = ({
                         'campo': member.find('name').text,
                         'x_min': int(bndbox.find('xmin').text) / width,
@@ -58,12 +46,19 @@ def ingresa_xml(folder):
                         'x_max': int(bndbox.find('xmax').text) / width,
                         'y_max': int(bndbox.find('ymax').text) / height,
                         })
-                    xml_list.append(value)
+
+                    if (member.find('name').text == 'logo'): 
+                        continue
+                    elif ('columna' in member.find('name').text) or ('detalle' in member.find('name').text):
+                        xml_list1.append(value)
+                    else:
+                        xml_list.append(value)
 
                 dic ={
-                    'nit': int(os.path.splitext(filename)[0]),
-                    'img_template': filename,
-                    'campos':xml_list
+                    'nit': int(os.path.splitext(filename)[0])
+                    ,'img_template': filename
+                    ,'campos': xml_list
+                    ,'detalle': xml_list1
                 }
 
                 inserta_dic(dic)
@@ -73,5 +68,5 @@ def ingresa_xml(folder):
             break
 
 
-ingresa_xml('templates')
+ingresa_xml('app/db/templates')
 # %%
