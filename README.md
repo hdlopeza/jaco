@@ -85,3 +85,10 @@ Diciembre 10-2021
 
 * Voy aplanar la estructura de archivos porque esta generando problema con las rutas de acceso
 * listo la tabla con rayas, falta integarlo en el programa principal
+
+Diciembre 12-2021
+
+* Ralice mejroamiento del codigo en reconocimiento de rayas
+* Simplifique el reconocimiento OCR
+* hay que mejorar el contrl de errores en OCR
+* Tarea: hacer salida hacia RPA ... sorprendente!!!!

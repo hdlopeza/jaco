@@ -11,9 +11,9 @@ import app_vision
 import app_vision_ocr
 import app_vision_imghdr
 import app_vision_convertpdf as cpdf
-import app_rnn as reconoce
+# import app_rnn as reconoce
 import app_db as db
-
+from datetime import datetime
 import matplotlib.pyplot as plt
 # %matplotlib inline
 
@@ -144,22 +144,27 @@ def ocr_imagenes(lista):
 
             img = cv2.imread(i[2])
             height, weight, _ = img.shape
-            record = db.busca_nit(int(i[0]))[0].get('campos')
-            record1 = db.busca_nit(int(i[0]))[0].get('detalle')
+            record_original = db.busca_nit(int(i[0]))[0]
+            record = record_original.get('campos')
+            record1 = record_original.get('detalle')
 
-            results['uno'] = app_vision_ocr.ocr_campos(
+            results['nit'] = record_original.get('nit')
+            results['fecha_procesamiento'] = datetime.now().strftime("%d-%b-%Y (%H:%M:%S)")
+            results['file'] = i[2]
+
+            results['campos'] = [app_vision_ocr.ocr_campos(
                 imagen=img
                 , record=record
                 , height=height
-                , weight=weight)
+                , weight=weight)]
 
-            results['dos'] = app_vision_ocr.ocr_detalle(
+            results['detalle'] = [app_vision_ocr.ocr_detalle(
                 imagen=img
                 , record=record1
                 , height=height
-                , weight=weight)
+                , weight=weight)]
 
-            print(results)
+            db.inserta_dic_alone(results)
 
         except IndexError:
             print('error en el registro {}'.format(i))
@@ -180,8 +185,3 @@ ocr_imagenes(lista_imagenes)
 
 # %%
 
-print('hola')
-
-
-
-# %%

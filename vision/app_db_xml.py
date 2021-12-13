@@ -28,8 +28,8 @@ def ingresa_xml(folder):
 
                 file = _file
 
-                xml_list = []
-                xml_list1 = []
+                xml_list = [] # Contenedor de los campos de factura
+                xml_list1 = [] # Contenedor de los campos de la seccion detalle
                 tree = ET.parse(os.path.join(_folder, file))
                 root = tree.getroot()
                 filename = root.find('filename').text

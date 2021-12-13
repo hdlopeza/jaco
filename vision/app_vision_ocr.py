@@ -16,6 +16,7 @@ plt.rcParams['figure.figsize'] = [30, 10]
 
 # %%
 
+TEXTO_RE = r"[\n]|[\x0c]|[,]|[|]|[)({}]|[\]\[]"
 
 def ocr_campos(imagen, record, height, weight):
 
@@ -30,7 +31,7 @@ def ocr_campos(imagen, record, height, weight):
         roi = imagen[y_min:y_max, x_min:x_max]
         roi = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
 
-        results[ii.get('campo')] = re.sub(r"[\n]|[\x0c]|[,]", "",
+        results[ii.get('campo')] = re.sub(TEXTO_RE, "",
                                           pytesseract.image_to_string(roi, config='--oem 1 --psm 6'))
 
     return results
@@ -132,7 +133,7 @@ def ocr_detalle(imagen, record, height, weight):
 
     # Quitar los caracteres basura
     dataframe = pd.DataFrame(todo).replace(
-        "[\n]|[\x0c]|[,]|[|]|[)({}]|[\]\[]", "", regex=True)  # .to_dict('records')
+        TEXTO_RE, "", regex=True)  # .to_dict('records')
 
     # Eliminar los regustros que sobran por nan
     try:

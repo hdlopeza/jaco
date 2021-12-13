@@ -9,8 +9,6 @@ from tinydb import TinyDB, Query
 
 # %% Se instancia la base de datos
 
-DIR_TEMPLATE = 'app/db/template'
-
 db = TinyDB('app/db/db.json')
 factura = Query()
 
@@ -44,6 +42,15 @@ def inserta_dic(dic):
     """
 
     db.upsert(dic, factura.nit == dic.get('nit'))
+
+def inserta_dic_alone(dic):
+    """Inserta un registro completo de diccionario
+
+    Args:
+        dic ([type]): [description]
+    """
+    db1 = TinyDB('app/db/db_results.json')
+    db1.insert(dic)
 
 def busca_nit(nit:int):
     try:
