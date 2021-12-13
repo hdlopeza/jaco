@@ -11,7 +11,7 @@ import app_vision
 import app_vision_ocr
 import app_vision_imghdr
 import app_vision_convertpdf as cpdf
-# import app_rnn as reconoce
+import app_rnn as reconoce
 import app_db as db
 from datetime import datetime
 import matplotlib.pyplot as plt
