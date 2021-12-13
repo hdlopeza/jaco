@@ -12,7 +12,6 @@ porque hace un resize del ancho manteniendo el ratio de la altura
 
 
 #%%
-import os
 import cv2
 import imutils
 import numpy as np
@@ -93,3 +92,16 @@ def align_images(image, template, maxFeatures=500, keepPercent=0.2, debug=False)
 
     # return the aligned image
     return aligned
+
+def prepocesar_imagen(imagen, erode, dilate):
+
+    struct = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
+
+    img = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+    img = cv2.GaussianBlur(img, (3, 3), 0, 0)
+    img = cv2.threshold(img, 250, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+    img = cv2.bitwise_not(img)
+    img = cv2.erode(img, struct, iterations=erode)
+    img = cv2.dilate(img, struct, anchor=(-1, -1), iterations=dilate)
+
+    return cv2.findContours(img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)

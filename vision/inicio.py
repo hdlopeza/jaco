@@ -8,11 +8,11 @@ import cv2
 import re
 import pytesseract
 from app_vision_convertpdf import pdf_a_imagen, imagen_a_imagen
+import app_vision
 import app_vision_imghdr as app_vision_imghdr
 import app_vision_convertpdf as cpdf
 import app_rnn as reconoce
 import app_db as db
-import app_vision_align as app_vision_align
 
 import matplotlib.pyplot as plt
 # %matplotlib inline
@@ -124,7 +124,7 @@ def alinear_imagenes(lista):
                 CARPETA_IMAGES_TEMPLATES,
                 record[0].get('img_template'))
             path_target = i[2]
-            image_new = app_vision_align.align_images(
+            image_new = app_vision.align_images(
                 image=path_target,
                 template=path_template)
             # image_new = cpdf.change_resolution(image_new)
