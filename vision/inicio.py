@@ -5,11 +5,11 @@
 #%%
 import os
 import cv2
-import re
-import pytesseract
 from app_vision_convertpdf import pdf_a_imagen, imagen_a_imagen
+from app_misc import recorre_carpeta
 import app_vision
-import app_vision_imghdr as app_vision_imghdr
+import app_vision_ocr
+import app_vision_imghdr
 import app_vision_convertpdf as cpdf
 import app_rnn as reconoce
 import app_db as db
@@ -25,21 +25,6 @@ CARPETA = 'data_origen'
 CARPETA_DESTINO = 'data'
 CARPETA_ERRORES = 'data_error'
 CARPETA_IMAGES_TEMPLATES = 'app/db/templates'
-
-
-def recorre_carpeta(folder):
-    """Recorre una carpeta y regresa un generador para usar de uno en uno
-
-    Args:
-        folder ([type]): [description]
-
-    Yields:
-        [type]: [description]
-    """
-
-    for (path, dirs, files) in os.walk(folder):
-        for file in files:
-            yield folder, file
 
 def preprocesamiento_a_imagen(folder, folder_out):
     """Ejecuta la operacion de recorrer una carpeta
@@ -139,53 +124,45 @@ def ocr_imagenes(lista):
     https://www.pyimagesearch.com/2020/09/07/ocr-a-document-form-or-invoice-with-tesseract-opencv-and-python/
 
     lista = [('8001304263', 0.84001195, 'data/8001304263_new.jpg'),
-        ('8002126635', 0.6552293, 'data/8002126635_new.jpg'),
-        ('8110213537', 0.8046723, 'data/2-029_new.jpg'),
-        ('8001539937', 0.6190442, 'data/8001539937_new.jpg')]
+ ('8002126635', 0.6552293, 'data/8002126635_new.jpg'),
+ ('8909049961', 0.8228462, 'data/8909049961_new.jpg'),
+ ('8110213537', 0.8046723, 'data/8000213537_new.jpg'),
+ ('8110142325', 0.21848114, 'data/345-77_new.jpg'),
+ ('8001304263', 0.76955444, 'data/19-104_new.jpg'),
+ ('8110142325', 0.21848114, 'data/8110142325_new.jpg'),
+ ('33289265', 0.38963863, 'data/33289265_new.jpg'),
+ ('8909299223', 0.36123875, 'data/8909299223_new.jpg'),
+ ('8110213537', 0.8046723, 'data/2-029_new.jpg'),
+ ('8001539937', 0.6190442, 'data/8001539937_new.jpg')]
     """
 
     for i in lista:
         try:
+            # print(i[2])
 
             results = {}
 
             img = cv2.imread(i[2])
-            img_bound = img.copy()
             height, weight, _ = img.shape
-
             record = db.busca_nit(int(i[0]))[0].get('campos')
+            record1 = db.busca_nit(int(i[0]))[0].get('detalle')
 
-            for ii in record:
+            results['uno'] = app_vision_ocr.ocr_campos(
+                imagen=img
+                , record=record
+                , height=height
+                , weight=weight)
 
-                y_min = int(ii.get('y_min')* height)
-                y_max = int(ii.get('y_max')* height)
-                x_min = int(ii.get('x_min')* weight)
-                x_max = int(ii.get('x_max')* weight)
-
-                roi = img[y_min:y_max , x_min:x_max]
-
-                roi = cv2.cvtColor(roi, cv2.COLOR_BGR2RGB)
-
-                if ii.get('campo') == "detalle":
-                    print("se realiza con tabla sin rayas")
-
-                else:
-                    text = re.sub(
-                        r"[\n]|[\x0c]|[,]"
-                        , ""
-                        , pytesseract.image_to_string(roi, config='--oem 1 --psm 6')
-                        )
-                    results[ii.get('campo')] = text
-
-                # img_bound = cv2.rectangle(img_bound, (x_min, y_min), (x_max,y_max), (0,255,0), 2)
+            results['dos'] = app_vision_ocr.ocr_detalle(
+                imagen=img
+                , record=record1
+                , height=height
+                , weight=weight)
 
             print(results)
-            # plt.imsave('hh.jpg', img_bound)
-
 
         except IndexError:
             print('error en el registro {}'.format(i))
-
 
 
 preprocesamiento_a_imagen(CARPETA, CARPETA_DESTINO)
@@ -199,6 +176,12 @@ ocr_imagenes(lista_imagenes)
 # Eliminar imagenes temporales
 # !rm -r data/*
 # !rm -r data_error/*
+
+
+# %%
+
+print('hola')
+
 
 
 # %%
